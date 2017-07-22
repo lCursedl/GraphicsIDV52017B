@@ -10,12 +10,6 @@
 #include "PrimitiveBase.h"
 #include "UtilsGL.h"
 
-
-
-//struct CVertex { 
-//	float x, y, z, w;
-//};
-
 class MeshGL : public PrimitiveBase {
 public:
 	MeshGL() : shaderID(0) {}
@@ -32,9 +26,6 @@ public:
 
 	GLint  matWorldViewProjUniformLoc;
 	GLint  matWorldUniformLoc;
-
-	/*CVertex4			vertices[24];
-	unsigned short	indices[36];*/
 	
 	GLuint			VB;
 	GLuint			IB;

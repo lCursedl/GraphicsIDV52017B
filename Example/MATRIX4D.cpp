@@ -221,9 +221,16 @@ MATRIX4D Zero(void) {
 
 MATRIX4D Identity(void) {
 	MATRIX4D R;
-	for (int j = 0; j < 4; j++)
+
+	R.m01 = R.m02 = R.m03 =
+		R.m10 = R.m12 = R.m13 =
+		R.m20 = R.m21 = R.m23 =
+		R.m30 = R.m31 = R.m32 = 0.0f;
+
+	R.m00 = R.m11 = R.m22 = R.m33 = 1.0f;
+	/*for (int j = 0; j < 4; j++)
 		for (int i = 0; i < 4; i++)
-			R.m[i][j] = 0;
+			R.m[i][j] = 0;*/
 	return R;
 }
 

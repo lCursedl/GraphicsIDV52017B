@@ -19,11 +19,8 @@ public:
 	bool OpenFile(const char * Filename);
 	void Parse(const char * Filename, std::vector<unsigned short>&Index, std::vector<CVertex4>&Vertex, MATRIX4D &M);
 
-	//MATRIX4D M;
 	std::string Xline;
 	std::fstream Xfile;
-	/*std::vector<float>Vertices;
-	std::vector<unsigned int>Indices;*/
 	char ctemp;
 	float ftemp;
 	unsigned short stemp;

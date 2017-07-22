@@ -23,6 +23,7 @@ void MeshGL::Create(char * filename) {
 	matWorldViewProjUniformLoc = glGetUniformLocation(shaderID, "WVP");
 	matWorldUniformLoc = glGetUniformLocation(shaderID, "World");
 
+
 	P.Parse(filename, Indices, Vertices, transform);
 
 	glGenBuffers(1, &VB);
@@ -35,7 +36,7 @@ void MeshGL::Create(char * filename) {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices.size() * sizeof(unsigned short), &Indices, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-	transform =  Identity();
+	//transform =  Identity();
 }
 
 void MeshGL::Transform(float *t) {
@@ -46,8 +47,9 @@ void MeshGL::Draw(float *t, float *vp) {
 	glUseProgram(shaderID);
 
 	if (t)
+	{
 		transform = t;
-
+	}
 	MATRIX4D VP = MATRIX4D(vp);
 	MATRIX4D WVP = transform*VP;
 

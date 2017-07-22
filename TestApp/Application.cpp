@@ -24,10 +24,9 @@ void TestApp::CreateAssets() {
 	VECTOR4D Up			= VECTOR4D(0.0f,1.0f,0.0f);
 	VECTOR4D LookAt		= VECTOR4D(0.0001f, 0.0001f, 0.0001f) - Pos;
 	View = LookAtRH(Pos, LookAt, Up);
-	//D3DXMatrixLookAtRH(&View,&Pos,&LookAt,&Up);
+
 	MATRIX4D Proj = PerspectiveFOVRH(PI, (1280.0f / 720.0f), 0.1, 1000);
 
-	//D3DXMatrixPerspectiveFovRH(&Proj,D3DXToRadian(45.0f),1280.0f/720.0f,0.1f,1000.0f);
 	//	D3DXMatrixOrthoRH(&Proj, 1280.0f / 720.0f, 1.0f , 0.1, 100.0f);
 	VP = View*Proj;
 
@@ -40,6 +39,13 @@ void TestApp::DestroyAssets() {
 void TestApp::OnUpdate() {
 	DtTimer.Update();
 
+	Triangle[0].TranslateAbsolute(Position.x, Position.y, Position.z);
+	Triangle[0].RotateXAbsolute(Orientation.x);
+	Triangle[0].RotateYAbsolute(Orientation.y);
+	Triangle[0].RotateZAbsolute(Orientation.z);
+	Triangle[0].ScaleAbsolute(Scaling.x);
+	Triangle[0].Update();
+
 	Models[0].TranslateAbsolute(Position.x, Position.y, Position.z);
 	Models[0].RotateXAbsolute(Orientation.x);
 	Models[0].RotateYAbsolute(Orientation.y);
@@ -47,12 +53,7 @@ void TestApp::OnUpdate() {
 	Models[0].ScaleAbsolute(Scaling.x);
 	Models[0].Update();
 
-	Triangle[0].TranslateAbsolute(Position.x, Position.y, Position.z);
-	Triangle[0].RotateXAbsolute(Orientation.x);
-	Triangle[0].RotateYAbsolute(Orientation.y);
-	Triangle[0].RotateZAbsolute(Orientation.z);
-	Triangle[0].ScaleAbsolute(Scaling.x);
-	Triangle[0].Update();
+	
 	OnInput();
 
 	
@@ -74,7 +75,7 @@ void TestApp::OnUpdate() {
 
 void TestApp::OnDraw() {
 	pFramework->pVideoDriver->Clear();
-	//Triangle[0].Draw();
+	Triangle[0].Draw();
 	Models[0].Draw();
 	//Cubes[0].Draw();
 	//Cubes[1].Draw();
