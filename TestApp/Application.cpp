@@ -74,7 +74,7 @@ void TestApp::OnUpdate() {
 
 void TestApp::OnDraw() {
 	pFramework->pVideoDriver->Clear();
-	Triangle[0].Draw();
+	//Triangle[0].Draw();
 	Models[0].Draw();
 	//Cubes[0].Draw();
 	//Cubes[1].Draw();

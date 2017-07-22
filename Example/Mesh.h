@@ -27,14 +27,14 @@ public:
 
 	GLuint	shaderID;
 	GLint	vertexAttribLoc;
-	//GLint	normalAttribLoc;
-	//GLint	uvAttribLoc;
+	GLint	normalAttribLoc;
+	GLint	uvAttribLoc;
 
 	GLint  matWorldViewProjUniformLoc;
 	GLint  matWorldUniformLoc;
 
-	CVertex4			vertices[24];
-	unsigned short	indices[36];
+	/*CVertex4			vertices[24];
+	unsigned short	indices[36];*/
 	
 	GLuint			VB;
 	GLuint			IB;

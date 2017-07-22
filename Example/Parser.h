@@ -6,9 +6,7 @@
 #include "MATRIX4D.h"
 
 struct CVertex4 {
-	float x, y, z, w;
-	float nx, ny, nz, nw;
-	float s, t;
+	float x, y, z;
 };
 
 class CParser
