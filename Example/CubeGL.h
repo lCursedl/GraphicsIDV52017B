@@ -13,7 +13,7 @@
 
 struct CVertex {
 
-	float x, y, z,w;
+	float x, y, z, w;
 	float nx,ny,nz,nw;
 	float s,t;
 };

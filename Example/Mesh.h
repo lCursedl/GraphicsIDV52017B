@@ -1,10 +1,9 @@
 #ifndef UAD_MESH_GL_H
 #define UAD_MESH_GL_H
 
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
+//#include <GLES2/gl2.h>
+//#include <GLES2/gl2ext.h>
 #include <d3dx9math.h>
-#include <vector>
 #include "Parser.h"
 
 #include "PrimitiveBase.h"
@@ -26,17 +25,9 @@ public:
 
 	GLint  matWorldViewProjUniformLoc;
 	GLint  matWorldUniformLoc;
-	
-	GLuint			VB;
-	GLuint			IB;
-
-	std::vector<unsigned short> Indices;
-	std::vector<CVertex4> Vertices;
 
 	MATRIX4D	transform;
 	CParser P;
+	std::vector<Mesh*>MyMeshes;
 };
-
-
 #endif
-
