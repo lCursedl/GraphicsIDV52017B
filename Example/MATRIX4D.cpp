@@ -282,6 +282,14 @@ MATRIX4D Transpose(MATRIX4D& A)
 	return MatTemp;
 }
 
+void XVecTransformNormalRH(VECTOR4D & vpout, const VECTOR4D & v, const MATRIX4D & mat)
+{
+	vpout.x = v.x*mat.m[0][0] + v.y*mat.m[0][1] + v.z*mat.m[0][2];
+	vpout.y = v.x*mat.m[1][0] + v.y*mat.m[1][1] + v.z*mat.m[1][2];
+	vpout.z = v.x*mat.m[2][0] + v.y*mat.m[2][1] + v.z*mat.m[2][2];
+	vpout.w = 1.0f;
+}
+
 MATRIX4D LookAtRH(VECTOR4D & EyePos, VECTOR4D & Target, VECTOR4D & Up)
 {
 	VECTOR4D xDir, yDir, zDir;
@@ -320,6 +328,7 @@ MATRIX4D PerspectiveFOVRH(float FOVY, float ratio, float zNear, float zFar)
 					0,	h,	0,								0,
 					0,	0,	zFar / (zNear - zFar),			-1,
 					0,	0,	zNear * zFar / (zNear - zFar),	0 };
+
 	return P;
 }
 
@@ -588,4 +597,10 @@ MATRIX4D Translation(float x, float y, float z)
 					0,1,0,0,
 					0,0,1,0,
 					x,y,z,1);
+}
+
+void XMatTranslation(MATRIX4D & mpout, VECTOR4D & v)
+{
+	mpout = Identity();
+	mpout.m[3][0] = v.x; mpout.m[3][1] = v.y; mpout.m[3][2] = v.z; mpout.m[3][3] = 1.0f;
 }

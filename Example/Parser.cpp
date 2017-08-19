@@ -82,6 +82,18 @@ void CParser::Parse(const char * Filename, std::vector<Mesh*>&MeshList)
 
 						Xfile >> ctemp;
 					}
+					Xfile >> _Mesh->NIndexSize >> ctemp;
+					_Mesh->nIndices = new unsigned short[_Mesh->NIndexSize * 3];
+					for (int i = 0; i < _Mesh->NIndexSize * 3; i++)
+					{
+						Xfile >> ctemp >> ctemp >> _Mesh->nIndices[i];
+						i++;
+
+						Xfile >> ctemp >> _Mesh->nIndices[i];
+						i++;
+
+						Xfile >> ctemp >> _Mesh->nIndices[i] >> ctemp >> ctemp;
+					}
 				}
 
 				if (LineTextCoords != -1)

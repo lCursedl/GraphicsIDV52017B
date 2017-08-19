@@ -21,9 +21,11 @@ struct Mesh
 {
 	CVertex4 * Vertices;
 	unsigned short * Indices;
+	unsigned short * nIndices;
 
 	int			VertexSize;
 	int			IndexSize;
+	int			NIndexSize;
 
 	GLuint		VB;
 	GLuint		IB;

@@ -60,6 +60,22 @@ void Win32Framework::ProcessInput() {
 			}break;
 		}
 	}
+	static int xDelta = 0;
+	static int yDelta = 0;
+
+	int x = 0;
+	int y = 0;
+
+	SDL_GetMouseState(&x, &y);
+
+	xDelta = x - xDelta;
+	yDelta = y - yDelta;
+
+	pBaseApp->IManager.xDelta = xDelta;
+	pBaseApp->IManager.yDelta = yDelta;
+
+	xDelta = x;
+	yDelta = y;
 }
 void Win32Framework::ResetApplication() {
 }

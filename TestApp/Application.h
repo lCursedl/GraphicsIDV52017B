@@ -1,6 +1,7 @@
 #include <Core.h>
 #include <PrimitiveManager.h>
 #include <PrimitiveInstance.h>
+#include "Scene.h"
 
 #include <d3dx9math.h>
 #include <Timer.h>
@@ -26,6 +27,9 @@ public:
 	PrimitiveInst	Triangle[10];
 	PrimitiveInst	Models[10];
 
+	CCamera			MyCamera;
+	CCamera			*pCam;
+
 	VECTOR4D		Position;
 	VECTOR4D		Orientation;
 	VECTOR4D		Scaling;
@@ -39,9 +43,13 @@ public:
 	MATRIX4D		View;
 	MATRIX4D		Projection;
 	MATRIX4D		VP;
+
+	CScene			MyScene;
+
 	/*D3DXMATRIX		View;
 	D3DXMATRIX		Projection;
 	D3DXMATRIX		VP;*/
 
 	Timer			DtTimer;
+	float			Delta;
 };

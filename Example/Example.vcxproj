@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseDriver.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="CubeGL.h" />
     <ClInclude Include="GLDriver.h" />
@@ -30,12 +31,14 @@
     <ClInclude Include="PrimitiveBase.h" />
     <ClInclude Include="PrimitiveInstance.h" />
     <ClInclude Include="PrimitiveManager.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TriangleGL.h" />
     <ClInclude Include="UtilsGL.h" />
     <ClInclude Include="Win32Framework.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="CubeGL.cpp" />
     <ClCompile Include="GLDriver.cpp" />
@@ -45,6 +48,7 @@
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="PrimitiveInstance.cpp" />
     <ClCompile Include="PrimitiveManager.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TriangleGL.cpp" />
     <ClCompile Include="UtilsGL.cpp" />

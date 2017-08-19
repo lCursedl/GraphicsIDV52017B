@@ -5,6 +5,18 @@ void TestApp::InitVars() {
 	Position	= VECTOR4D(0.0f, 0.0f, 0.0f);
 	Orientation = VECTOR4D(0.0f, 0.0f, 0.0f);
 	Scaling		= VECTOR4D(1.0f, 1.0f, 1.0f);
+
+	MyCamera.Init(VECTOR4D(0.0f, 1.0f, 1.0f), 45.0f * (3.141592 / 180), 1280.0f / 720.0f, 1.0f, 8000.0f, false);
+	MyCamera.Speed = 10.0f;
+	MyCamera.Eye = VECTOR4D(0.0f, 9.75f, -31.0f);
+	MyCamera.Pitch = 0.14f;
+	MyCamera.Roll = 0.0f;
+	MyCamera.Yaw = 0.020f;
+	MyCamera.Update(0.0f);
+
+	pCam = &MyCamera;
+
+	MyScene.CreateCamera(pCam);
 }
 
 void TestApp::CreateAssets() {
@@ -24,6 +36,7 @@ void TestApp::CreateAssets() {
 	//	D3DXMatrixOrthoRH(&Proj, 1280.0f / 720.0f, 1.0f , 0.1, 100.0f);
 	VP = View*Proj;
 
+	PrimitiveMgr.SetSceneProps(&MyScene);
 }
 
 void TestApp::DestroyAssets() {
@@ -32,15 +45,19 @@ void TestApp::DestroyAssets() {
 
 void TestApp::OnUpdate() {
 	DtTimer.Update();
+	Delta = DtTimer.GetDTSecs();
+
+	OnInput();
+
+	pCam->Update(Delta);
+	VP = pCam->VP;
 
 	Models[0].TranslateAbsolute(Position.x, Position.y, Position.z);
 	Models[0].RotateXAbsolute(Orientation.x);
 	Models[0].RotateYAbsolute(Orientation.y);
 	Models[0].RotateZAbsolute(Orientation.z);
 	Models[0].ScaleAbsolute(Scaling.x);
-	Models[0].Update();
-		
-	OnInput();
+	Models[0].Update();	
 	
 	OnDraw();
 }
@@ -114,7 +131,31 @@ void TestApp::OnInput() {
 		Orientation.z += 60.0f*DtTimer.GetDTSecs();
 	}
 
-	
+	if (IManager.PressedKey(SDLK_w))
+	{
+		pCam->MoveFront(Delta);
+	}
+
+	if (IManager.PressedKey(SDLK_s))
+	{
+		pCam->MoveBack(Delta);
+	}
+
+	if (IManager.PressedKey(SDLK_a))
+	{
+		pCam->MoveLeft(Delta);
+	}
+
+	if (IManager.PressedKey(SDLK_d))
+	{
+		pCam->MoveRight(Delta);
+	}
+
+	float yaw = 0.005f*static_cast<float>(IManager.xDelta);
+	pCam->MoveYaw(yaw);
+
+	float pitch = 0.005f*static_cast<float>(IManager.yDelta);
+	pCam->MovePitch(pitch);
 }
 
 void TestApp::OnPause() {
