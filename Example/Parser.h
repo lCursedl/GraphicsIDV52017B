@@ -8,7 +8,8 @@
 #include "MATRIX4D.h"
 #include "UtilsGL.h"
 
-struct CVertex4 {
+struct CVertex4
+{
 	CVertex4() : x(0.0f), y(0.0f), z(0.0f), w(1.0f), nx(0.0f), ny(0.0f), nz(0.0f), nw(1.0f){
 
 	}
@@ -17,15 +18,26 @@ struct CVertex4 {
 	float u, v;
 };
 
+struct M_Material
+{
+	unsigned short Material_ID;
+	std::vector<unsigned short>Material_Index;
+};
+
 struct Mesh
 {
 	CVertex4 * Vertices;
+	float * Vertex;
 	unsigned short * Indices;
-	unsigned short * nIndices;
+	std::vector<M_Material*>MaterialList;
 
 	int			VertexSize;
 	int			IndexSize;
-	int			NIndexSize;
+	unsigned short nMaterials = 0;
+	unsigned int Stride = 16;
+
+	bool HasNormal;
+	bool HasTexcoords;
 
 	GLuint		VB;
 	GLuint		IB;
@@ -46,5 +58,6 @@ public:
 	char ctemp;
 	float ftemp;
 	unsigned short stemp;
+	int itemp;
 	int size;
 };

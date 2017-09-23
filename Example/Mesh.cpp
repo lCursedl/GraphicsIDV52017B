@@ -30,7 +30,7 @@ void MeshGL::Create(char * filename) {
 	{
 		glGenBuffers(1, &MyMeshes[i]->VB);
 		glBindBuffer(GL_ARRAY_BUFFER, MyMeshes[i]->VB);
-		glBufferData(GL_ARRAY_BUFFER, MyMeshes[i]->VertexSize * sizeof(CVertex4), MyMeshes[i]->Vertices, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, (MyMeshes[i]->VertexSize * MyMeshes[i]->Stride) * sizeof(float), MyMeshes[i]->Vertex, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		glGenBuffers(1, &MyMeshes[i]->IB);
@@ -73,11 +73,13 @@ void MeshGL::Draw(float *t, float *vp) {
 		}			
 		//
 
-		glVertexAttribPointer(vertexAttribLoc, 4, GL_FLOAT, GL_FALSE, sizeof(CVertex4), BUFFER_OFFSET(0));
-		glVertexAttribPointer(normalAttribLoc, 4, GL_FLOAT, GL_FALSE, sizeof(CVertex4), BUFFER_OFFSET(16));
-
+		glVertexAttribPointer(vertexAttribLoc, 4, GL_FLOAT, GL_FALSE, sizeof(float), BUFFER_OFFSET(0));
+		if (MyMeshes[i]->HasNormal)
+		{
+			glVertexAttribPointer(normalAttribLoc, 4, GL_FLOAT, GL_FALSE, sizeof(float), BUFFER_OFFSET(16));
+		}
 		if (uvAttribLoc != -1)
-			glVertexAttribPointer(uvAttribLoc, 2, GL_FLOAT, GL_FALSE, sizeof(CVertex4), BUFFER_OFFSET(32));
+			glVertexAttribPointer(uvAttribLoc, 2, GL_FLOAT, GL_FALSE, sizeof(float), BUFFER_OFFSET(32));
 
 		glDrawElements(GL_TRIANGLES, MyMeshes[i]->IndexSize * 3, GL_UNSIGNED_SHORT, 0);
 
