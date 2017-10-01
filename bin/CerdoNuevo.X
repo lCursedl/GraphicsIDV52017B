@@ -36857,7 +36857,7 @@ Frame pinata_cerdo_ {
 
      EffectParamString {
       "diffuseMap";
-      "Texturas\\cerdo_D.tga";
+      "cerdo_D.tga";
      }
 
      EffectParamDWord {
@@ -37220,7 +37220,7 @@ Frame pinata_cerdo_ {
 
      EffectParamString {
       "diffuseMap";
-      "Texturas\\cerdo_D.tga";
+      "cerdo_D.tga";
      }
 
      EffectParamDWord {

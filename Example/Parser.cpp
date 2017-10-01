@@ -36,29 +36,34 @@ void CParser::Parse(const char * Filename, std::vector<Mesh*>&MeshList)
 				int LineNormals = Xline.find("MeshNormals normals");
 				int LineTextCoords = Xline.find("MeshTextureCoords tc0");
 				int LineMaterials = Xline.find("MeshMaterialList mtls");
+				int LineTexturePath = Xline.find("diffuseMap");
 				float * TempVec;
 				float * TempNrml;
 				float * TempTxt;
+				int MaterialID = 0;
 
 				if (LineMesh != -1)
 				{
 					_Mesh = new Mesh;
 					//Cantidad de vertices
 					Xfile >> _Mesh->VertexSize >> ctemp;
-					/*_Mesh->Vertices = new CVertex4[_Mesh->VertexSize];
+					_Mesh->Vertices = new CVertex4[_Mesh->VertexSize];
 					for (int i = 0; i < _Mesh->VertexSize; i++)
 					{
+						//X
 						Xfile >> _Mesh->Vertices[i].x >> ctemp;
 
+						//Y
 						Xfile >> _Mesh->Vertices[i].y >> ctemp;
 
+						//Z
 						Xfile >> _Mesh->Vertices[i].z >> ctemp;
 
+						//W = 1.0
 						Xfile >> ctemp;
-
-					}*/
+					}
 					//Dinamic vertex
-					TempVec = new float[_Mesh->VertexSize * (_Mesh->Stride / 4)];
+					/*TempVec = new float[_Mesh->VertexSize * (_Mesh->Stride / 4)];
 					_Mesh->Vertex = new float[_Mesh->VertexSize * (_Mesh->Stride / 4)];
 					for (long i = 0; i < _Mesh->VertexSize * 4; i++)
 					{
@@ -76,7 +81,7 @@ void CParser::Parse(const char * Filename, std::vector<Mesh*>&MeshList)
 
 						TempVec[i] = 1.0f;
 						std::cout << TempVec[i] << std::endl;
-					}
+					}*/
 
 					//Cantidad de índices
 					Xfile >> _Mesh->IndexSize >> ctemp;
@@ -93,124 +98,81 @@ void CParser::Parse(const char * Filename, std::vector<Mesh*>&MeshList)
 					}
 				}
 
-				//if (LineNormals != -1)
-				//{
-				//	_Mesh->Stride += 16;
-				//	TempNrml = new float[_Mesh->VertexSize * 4];
-				//	//Normales
-				//	Xfile >> _Mesh->VertexSize >> ctemp;
-				//	/*for (int i = 0; i < _Mesh->VertexSize; i++)
-				//	{
-				//		Xfile >> _Mesh->Vertices[i].nx >> ctemp;
+				if (LineNormals != -1)
+				{
+					_Mesh->Stride += 16;
+					//TempNrml = new float[_Mesh->VertexSize * 4];
+					//Normales
+					Xfile >> _Mesh->VertexSize >> ctemp;
+					for (int i = 0; i < _Mesh->VertexSize; i++)
+					{
+						//NX
+						Xfile >> _Mesh->Vertices[i].nx >> ctemp;
 
-				//		Xfile >> _Mesh->Vertices[i].ny >> ctemp;
+						//NY
+						Xfile >> _Mesh->Vertices[i].ny >> ctemp;
 
-				//		Xfile >> _Mesh->Vertices[i].nz >> ctemp; 
+						//NZ
+						Xfile >> _Mesh->Vertices[i].nz >> ctemp; 
 
-				//		Xfile >> ctemp;
-				//	}*/
-				//	//Dinamic normals
-				//	for (int i = 0; i < _Mesh->VertexSize * 4; i++)
-				//	{
-				//		//NX
-				//		Xfile >> TempNrml[i] >> ctemp;
-				//		i++;
-				//		//NY
-				//		Xfile >> TempNrml[i] >> ctemp;
-				//		i++;
-				//		//NZ
-				//		Xfile >> TempNrml[i] >> ctemp;
-				//		Xfile >> ctemp;
-				//		i++;
-				//		//NW
-				//		TempNrml[i] = 1.0f;
-				//	}
-				//}
+						Xfile >> ctemp;
+					}
+					//Dinamic normals
+					//for (int i = 0; i < _Mesh->VertexSize * 4; i++)
+					//{
+					//	//NX
+					//	Xfile >> TempNrml[i] >> ctemp;
+					//	i++;
+					//	//NY
+					//	Xfile >> TempNrml[i] >> ctemp;
+					//	i++;
+					//	//NZ
+					//	Xfile >> TempNrml[i] >> ctemp;
+					//	Xfile >> ctemp;
+					//	i++;
+					//	//NW
+					//	TempNrml[i] = 1.0f;
+					//}
+				}
 
-				//if (LineTextCoords != -1)
-				//{
-				//	//Coordenadas de textura
-				//	/*Xfile >> _Mesh->VertexSize >> ctemp;
-				//	for (int i = 0; i < _Mesh->VertexSize; i++)
-				//	{
-				//		Xfile >> _Mesh->Vertices[i].u >> ctemp;
+				if (LineTextCoords != -1)
+				{
+					//Coordenadas de textura
+					Xfile >> _Mesh->VertexSize >> ctemp;
+					for (int i = 0; i < _Mesh->VertexSize; i++)
+					{
+						//U
+						Xfile >> _Mesh->Vertices[i].u >> ctemp;
 
-				//		Xfile >> _Mesh->Vertices[i].v >> ctemp;
-				//		Xfile >> ctemp;
+						//V
+						Xfile >> _Mesh->Vertices[i].v >> ctemp;
+						Xfile >> ctemp;
 
-				//	}*/
-				//	//Dinamic Texcoords
-				//	_Mesh->Stride += 8;
-				//	float * TempT = new float[_Mesh->VertexSize * (_Mesh->Stride / 4)];
-				//	int offsetpos = 0;					
-
-				//	for (int i = 0; i < _Mesh->VertexSize * (_Mesh->Stride / 4); i++)
-				//	{
-				//		if (_Mesh->HasNormal)
-				//		{
-				//			for (offsetpos; offsetpos < _Mesh->VertexSize * ((_Mesh->Stride - 8) * 4); offsetpos++)
-				//			{
-				//				//X
-				//				TempT[i] = _Mesh->Vertex[offsetpos];
-				//				i++;
-				//				offsetpos++;
-				//				//Y
-				//				TempT[i] = _Mesh->Vertex[offsetpos];
-				//				i++;
-				//				offsetpos++;
-				//				//Z
-				//				TempT[i] = _Mesh->Vertex[offsetpos];
-				//				i++;
-				//				offsetpos++;
-				//				//W
-				//				TempT[i] = _Mesh->Vertex[offsetpos];
-				//				i++;
-				//				offsetpos++;
-				//				//NX
-				//				TempT[i] = _Mesh->Vertex[offsetpos];
-				//				i++;
-				//				offsetpos++;
-				//				//NY
-				//				TempT[i] = _Mesh->Vertex[offsetpos];
-				//				i++;
-				//				offsetpos++;
-				//				//NZ
-				//				TempT[i] = _Mesh->Vertex[offsetpos];
-				//				i++;
-				//				offsetpos++;
-				//				//NW
-				//				TempT[i] = _Mesh->Vertex[offsetpos];
-				//				i++;
-				//				//U
-				//				Xfile >> _Mesh->Vertex[i] >> ctemp;
-				//				i++;
-				//				//V
-				//				Xfile >> _Mesh->Vertex[i] >> ctemp >> ctemp;								
-				//			}
-				//		}
-				//		else
-				//		{
-				//			
-				//		}						
-				//	}
-				//	delete[] _Mesh->Vertex;
-				//	_Mesh->Vertex = new float[_Mesh->VertexSize * (_Mesh->Stride / 4)];
-				//	_Mesh->Vertex = TempT;
-				//	delete[] TempT;
-				//	MeshList.push_back(_Mesh);
-				//}
+					}
+					//Dinamic Texcoords
+					//_Mesh->Stride += 8;
+					//for (int i = 0; i < _Mesh->VertexSize * (_Mesh->Stride / 4); i++)
+					//{
+					//	//U
+					//	Xfile >> _Mesh->Vertex[i] >> ctemp;
+					//	i++;
+					//	//V
+					//	Xfile >> _Mesh->Vertex[i] >> ctemp >> ctemp;
+					//}
+				}
 
 				if (LineMaterials != -1)
 				{
 					Xfile >> _Mesh->nMaterials >> ctemp >> itemp >> ctemp;
+					material_count = _Mesh->MaterialList.size();
 					M_Material * M;
-					for (short i = 0; i < _Mesh->nMaterials; i++)
+					for (int i = 0; i < _Mesh->nMaterials; i++) 
 					{
 						M = new M_Material;
 						M->Material_ID = i;
 						_Mesh->MaterialList.push_back(M);
 					}
-					for (int i = 0; i < _Mesh->IndexSize; i++)
+					for (int i = 0; i < itemp * 3; i++)
 					{
 						Xfile >> stemp >> ctemp;
 						for (int j = 0; j < _Mesh->MaterialList.size(); j++)
@@ -218,11 +180,34 @@ void CParser::Parse(const char * Filename, std::vector<Mesh*>&MeshList)
 							if (stemp == _Mesh->MaterialList[j]->Material_ID)
 							{
 								_Mesh->MaterialList[j]->Material_Index.push_back(_Mesh->Indices[i]);
+								i++;
+
+								_Mesh->MaterialList[j]->Material_Index.push_back(_Mesh->Indices[i]);
+								i++;
+
+								_Mesh->MaterialList[j]->Material_Index.push_back(_Mesh->Indices[i]);
+								_Mesh->MaterialList[j]->IndexSize += 3;
 							}
 						}
 					}
 					MeshList.push_back(_Mesh);
 				}
+				/*if (LineTexturePath != -1)
+				{
+					Xfile >> _Mesh->MaterialList[diffuse_count]->DiffusePath;
+					_Mesh->MaterialList[diffuse_count]->DiffusePath = _Mesh->MaterialList[diffuse_count]->DiffusePath.substr(1, _Mesh->MaterialList[diffuse_count]->DiffusePath.size() - 3);
+					diffuse_count++;
+				}*/
+
+				//if (diffuse_count == material_count)
+				//{
+				//	diffuse_count = 0;
+				//	while (diffuse_count < _Mesh->MaterialList.size())
+				//	{
+				//		int x = 0, y = 0, channels = 0;
+				//		//unsigned char *buffer = stbi_load(path.c_str)
+				//	}
+				//}
 			}
 		}
 		Xfile.close();

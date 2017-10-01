@@ -30,13 +30,16 @@ void MeshGL::Create(char * filename) {
 	{
 		glGenBuffers(1, &MyMeshes[i]->VB);
 		glBindBuffer(GL_ARRAY_BUFFER, MyMeshes[i]->VB);
-		glBufferData(GL_ARRAY_BUFFER, (MyMeshes[i]->VertexSize * MyMeshes[i]->Stride) * sizeof(float), MyMeshes[i]->Vertex, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, MyMeshes[i]->VertexSize * sizeof(CVertex4), MyMeshes[i]->Vertices, GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-		glGenBuffers(1, &MyMeshes[i]->IB);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, MyMeshes[i]->IB);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, (MyMeshes[i]->IndexSize * 3) * sizeof(unsigned short), MyMeshes[i]->Indices, GL_STATIC_DRAW);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);		
+		for (int j = 0; j < MyMeshes[i]->nMaterials; j++)
+		{
+			glGenBuffers(1, &MyMeshes[i]->MaterialList[j]->IB);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, MyMeshes[i]->MaterialList[j]->IB);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, MyMeshes[i]->MaterialList[j]->IndexSize * sizeof(unsigned short), &MyMeshes[i]->MaterialList[j]->Material_Index[0], GL_STATIC_DRAW);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		}		
 	}
 	transform = Identity();
 }
@@ -60,8 +63,7 @@ void MeshGL::Draw(float *t, float *vp) {
 
 	for (int i = 0; i < MyMeshes.size(); i++)
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, MyMeshes[i]->VB);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, MyMeshes[i]->IB);
+		glBindBuffer(GL_ARRAY_BUFFER, MyMeshes[i]->VB);		
 
 		glEnableVertexAttribArray(vertexAttribLoc);
 		glEnableVertexAttribArray(normalAttribLoc);
@@ -70,18 +72,22 @@ void MeshGL::Draw(float *t, float *vp) {
 		if (uvAttribLoc != -1)
 		{
 			glEnableVertexAttribArray(uvAttribLoc);
-		}			
+		}
 		//
 
-		glVertexAttribPointer(vertexAttribLoc, 4, GL_FLOAT, GL_FALSE, sizeof(float), BUFFER_OFFSET(0));
+		glVertexAttribPointer(vertexAttribLoc, 4, GL_FLOAT, GL_FALSE, sizeof(CVertex4), BUFFER_OFFSET(0));
 		if (MyMeshes[i]->HasNormal)
 		{
-			glVertexAttribPointer(normalAttribLoc, 4, GL_FLOAT, GL_FALSE, sizeof(float), BUFFER_OFFSET(16));
+			glVertexAttribPointer(normalAttribLoc, 4, GL_FLOAT, GL_FALSE, sizeof(CVertex4), BUFFER_OFFSET(16));
 		}
 		if (uvAttribLoc != -1)
-			glVertexAttribPointer(uvAttribLoc, 2, GL_FLOAT, GL_FALSE, sizeof(float), BUFFER_OFFSET(32));
+			glVertexAttribPointer(uvAttribLoc, 2, GL_FLOAT, GL_FALSE, sizeof(CVertex4), BUFFER_OFFSET(32));
 
-		glDrawElements(GL_TRIANGLES, MyMeshes[i]->IndexSize * 3, GL_UNSIGNED_SHORT, 0);
+		for (int j = 0; j < MyMeshes[i]->MaterialList.size(); j++)
+		{
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, MyMeshes[i]->MaterialList[j]->IB);
+			glDrawElements(GL_TRIANGLES, MyMeshes[i]->MaterialList[j]->IndexSize, GL_UNSIGNED_SHORT, 0);
+		}		
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -94,7 +100,8 @@ void MeshGL::Draw(float *t, float *vp) {
 		if (uvAttribLoc != -1)
 		{
 			glDisableVertexAttribArray(uvAttribLoc);
-		}		
+		}
+					
 	}
 	glUseProgram(0);
 }

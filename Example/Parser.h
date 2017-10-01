@@ -22,6 +22,10 @@ struct M_Material
 {
 	unsigned short Material_ID;
 	std::vector<unsigned short>Material_Index;
+	int IndexSize = 0;
+	GLuint IB;
+	GLuint diffuse_textID;
+	std::string DiffusePath;
 };
 
 struct Mesh
@@ -60,4 +64,6 @@ public:
 	unsigned short stemp;
 	int itemp;
 	int size;
+	int diffuse_count = 0;
+	int material_count = 0;
 };
