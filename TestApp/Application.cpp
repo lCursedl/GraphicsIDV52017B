@@ -22,7 +22,7 @@ void TestApp::InitVars() {
 void TestApp::CreateAssets() {
 	PrimitiveMgr.SetVP(&VP);
 
-	int indexI = PrimitiveMgr.CreateMesh("NuBatman.X");
+	int indexI = PrimitiveMgr.CreateMesh("CerdoNuevo.X");
 	Models[0].CreateInstance(PrimitiveMgr.GetPrimitive(indexI), &VP);
 
 	MATRIX4D View;

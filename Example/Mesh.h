@@ -22,6 +22,7 @@ public:
 	GLint	vertexAttribLoc;
 	GLint	normalAttribLoc;
 	GLint	uvAttribLoc;
+	GLint	diffuseAttribLoc;
 
 	GLint  matWorldViewProjUniformLoc;
 	GLint  matWorldUniformLoc;

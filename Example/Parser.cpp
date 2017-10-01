@@ -1,5 +1,6 @@
 #include "Parser.h"
-
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 
 CParser::CParser()
@@ -164,7 +165,7 @@ void CParser::Parse(const char * Filename, std::vector<Mesh*>&MeshList)
 				if (LineMaterials != -1)
 				{
 					Xfile >> _Mesh->nMaterials >> ctemp >> itemp >> ctemp;
-					material_count = _Mesh->MaterialList.size();
+					material_count = _Mesh->nMaterials;
 					M_Material * M;
 					for (int i = 0; i < _Mesh->nMaterials; i++) 
 					{
@@ -190,24 +191,34 @@ void CParser::Parse(const char * Filename, std::vector<Mesh*>&MeshList)
 							}
 						}
 					}
-					MeshList.push_back(_Mesh);
+					
 				}
-				/*if (LineTexturePath != -1)
+				if (LineTexturePath != -1)
 				{
 					Xfile >> _Mesh->MaterialList[diffuse_count]->DiffusePath;
 					_Mesh->MaterialList[diffuse_count]->DiffusePath = _Mesh->MaterialList[diffuse_count]->DiffusePath.substr(1, _Mesh->MaterialList[diffuse_count]->DiffusePath.size() - 3);
 					diffuse_count++;
-				}*/
+				}
 
-				//if (diffuse_count == material_count)
-				//{
-				//	diffuse_count = 0;
-				//	while (diffuse_count < _Mesh->MaterialList.size())
-				//	{
-				//		int x = 0, y = 0, channels = 0;
-				//		//unsigned char *buffer = stbi_load(path.c_str)
-				//	}
-				//}
+				if (diffuse_count == material_count)
+				{
+					diffuse_count = 0;
+					while (diffuse_count < _Mesh->MaterialList.size())
+					{
+						int x = 0, y = 0, channels = 0;
+						unsigned char *buffer = stbi_load(_Mesh->MaterialList[diffuse_count]->DiffusePath.c_str(), &x, &y, &channels, 0);
+
+						glGenTextures(1, &_Mesh->MaterialList[diffuse_count]->diffuse_textID);
+						glBindTexture(GL_TEXTURE_2D, _Mesh->MaterialList[diffuse_count]->diffuse_textID);
+
+						glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+						glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*)(buffer));
+						glGenerateMipmap(GL_TEXTURE_2D);
+						++diffuse_count;
+					}
+					diffuse_count = 0;
+					MeshList.push_back(_Mesh);
+				}
 			}
 		}
 		Xfile.close();

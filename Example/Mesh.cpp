@@ -19,6 +19,7 @@ void MeshGL::Create(char * filename) {
 	vertexAttribLoc = glGetAttribLocation(shaderID, "Vertex");
 	normalAttribLoc = glGetAttribLocation(shaderID, "Normal");
 	uvAttribLoc = glGetAttribLocation(shaderID, "UV");
+	diffuseAttribLoc = glGetAttribLocation(shaderID, "Diffuse");
 
 	matWorldViewProjUniformLoc = glGetUniformLocation(shaderID, "WVP");
 	matWorldUniformLoc = glGetUniformLocation(shaderID, "World");
@@ -67,12 +68,13 @@ void MeshGL::Draw(float *t, float *vp) {
 
 		glEnableVertexAttribArray(vertexAttribLoc);
 		glEnableVertexAttribArray(normalAttribLoc);
+		glEnableVertexAttribArray(diffuseAttribLoc);
 
 		//Eliminar al pasar a MeshGL
-		if (uvAttribLoc != -1)
-		{
+		//if (uvAttribLoc != -1)
+		//{
 			glEnableVertexAttribArray(uvAttribLoc);
-		}
+		//}
 		//
 
 		glVertexAttribPointer(vertexAttribLoc, 4, GL_FLOAT, GL_FALSE, sizeof(CVertex4), BUFFER_OFFSET(0));
@@ -85,6 +87,12 @@ void MeshGL::Draw(float *t, float *vp) {
 
 		for (int j = 0; j < MyMeshes[i]->MaterialList.size(); j++)
 		{
+			if (diffuseAttribLoc != -1)
+			{
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, MyMeshes[i]->MaterialList[j]->diffuse_textID);
+				glUniform1i(diffuseAttribLoc, 0);
+			}
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, MyMeshes[i]->MaterialList[j]->IB);
 			glDrawElements(GL_TRIANGLES, MyMeshes[i]->MaterialList[j]->IndexSize, GL_UNSIGNED_SHORT, 0);
 		}		
@@ -97,6 +105,7 @@ void MeshGL::Draw(float *t, float *vp) {
 		//Eliminar al pasar a MeshGDL
 		glDisableVertexAttribArray(normalAttribLoc);
 
+		glDisableVertexAttribArray(diffuseAttribLoc);
 		if (uvAttribLoc != -1)
 		{
 			glDisableVertexAttribArray(uvAttribLoc);

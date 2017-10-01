@@ -24,7 +24,5 @@ public:
 	std::vector<PrimitiveBase*> primitives;
 
 	MATRIX4D *pVP;
-	//D3DXMATRIX *pVP;
 };
-
 #endif

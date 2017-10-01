@@ -8,6 +8,7 @@
 #include "MATRIX4D.h"
 #include "UtilsGL.h"
 
+
 struct CVertex4
 {
 	CVertex4() : x(0.0f), y(0.0f), z(0.0f), w(1.0f), nx(0.0f), ny(0.0f), nz(0.0f), nw(1.0f){
@@ -65,5 +66,5 @@ public:
 	int itemp;
 	int size;
 	int diffuse_count = 0;
-	int material_count = 0;
+	int material_count = -1;
 };
