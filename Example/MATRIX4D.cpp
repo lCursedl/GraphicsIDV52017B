@@ -8,7 +8,7 @@ VECTOR4D::VECTOR4D(float X, float Y, float Z, float W)
 	w = W;
 }
 
-VECTOR4D::VECTOR4D(VECTOR4D& A)
+VECTOR4D::VECTOR4D(const VECTOR4D& A)
 {
 	x = A.x;
 	y = A.y;

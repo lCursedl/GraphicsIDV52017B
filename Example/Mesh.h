@@ -7,6 +7,7 @@
 #include "Parser.h"
 
 #include "PrimitiveBase.h"
+#include "Scene.h"
 #include "UtilsGL.h"
 
 class MeshGL : public PrimitiveBase {
@@ -16,6 +17,7 @@ public:
 	void Create(char * filename);
 	void Transform(float *t);
 	void Draw(float *t, float *vp);
+	//void SetScene(CScene * pScene);
 	void Destroy();
 
 	GLuint	shaderID;
@@ -23,6 +25,7 @@ public:
 	GLint	normalAttribLoc;
 	GLint	uvAttribLoc;
 	GLint	diffuseAttribLoc;
+	GLint	lightposLoc;
 
 	GLint  matWorldViewProjUniformLoc;
 	GLint  matWorldUniformLoc;

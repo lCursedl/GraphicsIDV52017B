@@ -14,7 +14,7 @@ struct VECTOR4D
 		float v[4];
 	};
 	VECTOR4D() { x = 0; y = 0; z = 0; w = 0;};
-	VECTOR4D(VECTOR4D& V);
+	VECTOR4D(const VECTOR4D& V);
 	VECTOR4D(float X, float Y = 0, float Z = 0, float W = 1);
 	VECTOR4D& operator+=(VECTOR4D& A);
 	VECTOR4D& operator-=(VECTOR4D& A);

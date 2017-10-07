@@ -29,16 +29,12 @@ public:
 
 	CCamera			MyCamera;
 	CCamera			*pCam;
+	CCamera			LightCamera;
 
 	VECTOR4D		Position;
 	VECTOR4D		Orientation;
 	VECTOR4D		Scaling;
 	VECTOR4D		WorldTransform;
-
-	/*D3DXVECTOR3		Position;
-	D3DXVECTOR3		Orientation;
-	D3DXVECTOR3		Scaling;
-	D3DXMATRIX		WorldTransform;*/
 
 	MATRIX4D		View;
 	MATRIX4D		Projection;
