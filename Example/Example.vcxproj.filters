@@ -62,7 +62,10 @@
     <ClInclude Include="Scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TextureGL.h">
+    <ClInclude Include="D3DXDriver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Configuration.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -112,7 +115,7 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TextureGL.cpp">
+    <ClCompile Include="D3DXDriver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

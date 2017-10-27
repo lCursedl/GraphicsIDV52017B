@@ -290,6 +290,14 @@ void XVecTransformNormalRH(VECTOR4D & vpout, const VECTOR4D & v, const MATRIX4D 
 	vpout.w = 1.0f;
 }
 
+void XVecTransformNormalLH(VECTOR4D & vpout, const VECTOR4D & v, const MATRIX4D & mat)
+{
+	vpout.x = v.x*mat.m[0][0] + v.y*mat.m[1][0] + v.z*mat.m[2][0];
+	vpout.y = v.x*mat.m[0][1] + v.y*mat.m[1][1] + v.z*mat.m[2][1];
+	vpout.z = v.x*mat.m[0][2] + v.y*mat.m[1][2] + v.z*mat.m[2][2];
+	vpout.w = 1.0f;
+}
+
 MATRIX4D LookAtRH(VECTOR4D & EyePos, VECTOR4D & Target, VECTOR4D & Up)
 {
 	VECTOR4D xDir, yDir, zDir;
@@ -339,9 +347,9 @@ MATRIX4D PerspectiveFOVLH(float FOVY, float ratio, float zNear, float zFar)
 	float h = cos(ang) / sin(ang);
 	float w = h / ratio;
 	MATRIX4D P = { w,	0,	0,								0,
-		0,	h,	0,								0,
-		0,	0,	zFar / (zFar - zNear),			1,
-		0,	0,	-zNear * zFar / (zFar - zNear),	0};
+				   0,	h,	0,								0,
+				   0,	0,	zFar / (zFar - zNear),			1,
+				   0,	0,	-zNear * zFar / (zFar - zNear),	0};
 	return P;
 }
 
@@ -586,6 +594,39 @@ MATRIX4D RotateZRH(float theta)
 	/*R.m11 = R.m00 = cosf(theta);
 	R.m01 = -sinf(theta);
 	R.m10 = -R.m01;*/
+	return R;
+}
+
+MATRIX4D RotateXLH(float theta)
+{
+	MATRIX4D R(1);
+	R.m[0][0] = 1.0f;
+	R.m[1][1] = cosf(theta);
+	R.m[1][2] = sinf(theta);
+	R.m[2][1] = -sinf(theta);
+	R.m[2][2] = cosf(theta);
+	return R;
+}
+
+MATRIX4D RotateYLH(float theta)
+{
+	MATRIX4D R(1);
+	R.m[1][1] = 1.0f;
+	R.m[0][0] = cosf(theta);
+	R.m[0][2] = sinf(theta);
+	R.m[2][0] = sinf(theta);
+	R.m[2][2] = cosf(theta);
+	return R;
+}
+
+MATRIX4D RotateZLH(float theta)
+{
+	MATRIX4D R(1);
+	R.m[2][2] = 1.0f;
+	R.m[0][0] = cosf(theta);
+	R.m[0][1] = sinf(theta);
+	R.m[1][0] = -sinf(theta);
+	R.m[1][1] = cosf(theta);
 	return R;
 }
 

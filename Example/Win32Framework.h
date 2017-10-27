@@ -3,6 +3,7 @@
 
 #include "Core.h"
 #include "BaseDriver.h"
+
 #include <memory>
 
 class Win32Framework : public RootFramework {

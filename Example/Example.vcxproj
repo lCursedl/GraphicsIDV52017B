@@ -21,8 +21,10 @@
   <ItemGroup>
     <ClInclude Include="BaseDriver.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Configuration.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="CubeGL.h" />
+    <ClInclude Include="D3DXDriver.h" />
     <ClInclude Include="GLDriver.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="MATRIX4D.h" />
@@ -32,7 +34,6 @@
     <ClInclude Include="PrimitiveInstance.h" />
     <ClInclude Include="PrimitiveManager.h" />
     <ClInclude Include="Scene.h" />
-    <ClInclude Include="TextureGL.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TriangleGL.h" />
     <ClInclude Include="UtilsGL.h" />
@@ -42,6 +43,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="CubeGL.cpp" />
+    <ClCompile Include="D3DXDriver.cpp" />
     <ClCompile Include="GLDriver.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="MATRIX4D.cpp" />
@@ -50,7 +52,6 @@
     <ClCompile Include="PrimitiveInstance.cpp" />
     <ClCompile Include="PrimitiveManager.cpp" />
     <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="TextureGL.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TriangleGL.cpp" />
     <ClCompile Include="UtilsGL.cpp" />

@@ -37031,7 +37031,7 @@ Frame pinata_cerdo_ {
     }
 
     TextureFilename Diffuse {
-     "Texturas\\cerdo_D.tga";
+     "cerdo_D.tga";
     }
    }
 
@@ -37384,7 +37384,7 @@ Frame pinata_cerdo_ {
     }
 
     TextureFilename Diffuse {
-     "Texturas\\cerdo_D.tga";
+     "cerdo_D.tga";
     }
    }
   }

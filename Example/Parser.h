@@ -1,6 +1,13 @@
 #pragma once
+#include "Configuration.h"
+
+#ifdef USING_OPENGL_ES
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
+#elif defined(USING_D3D11)
+#include <d3dcompiler.h>
+#endif
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -24,8 +31,13 @@ struct M_Material
 	unsigned short Material_ID;
 	std::vector<unsigned short>Material_Index;
 	int IndexSize = 0;
+#ifdef USING_OPENGL_ES
 	GLuint IB;
 	GLuint diffuse_textID;
+#elif defined (USING_D3D11)
+
+#endif // USING_OPENGL_ES
+	
 	std::string DiffusePath;
 };
 
@@ -44,8 +56,13 @@ struct Mesh
 	bool HasNormal;
 	bool HasTexcoords;
 
+#ifdef USING_OPENGL_ES
 	GLuint		VB;
 	GLuint		IB;
+#elif defined (USING_D3D11)
+
+#endif
+	
 };
 
 class CParser

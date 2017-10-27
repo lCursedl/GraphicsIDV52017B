@@ -42,10 +42,6 @@ public:
 
 	CScene			MyScene;
 
-	/*D3DXMATRIX		View;
-	D3DXMATRIX		Projection;
-	D3DXMATRIX		VP;*/
-
 	Timer			DtTimer;
 	float			Delta;
 };

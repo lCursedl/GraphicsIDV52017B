@@ -37,7 +37,7 @@ void CParser::Parse(const char * Filename, std::vector<Mesh*>&MeshList)
 				int LineNormals = Xline.find("MeshNormals normals");
 				int LineTextCoords = Xline.find("MeshTextureCoords tc0");
 				int LineMaterials = Xline.find("MeshMaterialList mtls");
-				int LineTexturePath = Xline.find("diffuseMap");
+				int LineTexturePath = Xline.find("TextureFilename Diffuse");
 				float * TempVec;
 				float * TempNrml;
 				float * TempTxt;
@@ -208,12 +208,16 @@ void CParser::Parse(const char * Filename, std::vector<Mesh*>&MeshList)
 						int x = 0, y = 0, channels = 0;
 						unsigned char *buffer = stbi_load(_Mesh->MaterialList[diffuse_count]->DiffusePath.c_str(), &x, &y, &channels, 0);
 
+#ifdef USING_OPENGL_ES
 						glGenTextures(1, &_Mesh->MaterialList[diffuse_count]->diffuse_textID);
 						glBindTexture(GL_TEXTURE_2D, _Mesh->MaterialList[diffuse_count]->diffuse_textID);
 
 						glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 						glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*)(buffer));
 						glGenerateMipmap(GL_TEXTURE_2D);
+#elif defined(USING_D3D11)
+
+#endif
 						++diffuse_count;
 					}
 					diffuse_count = 0;

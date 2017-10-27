@@ -72,7 +72,7 @@ void CCamera::MoveYaw(float f)
 {
 	if (MaxYaw != 0.0f)
 	{
-		if ((Yaw + f) > MaxPitch || (Yaw + f) > -MaxPitch)
+		if ((Yaw + f) > MaxYaw || (Yaw + f) < -MaxYaw)
 		{
 			return;
 		}
@@ -147,10 +147,6 @@ void CCamera::Update(float DT)
 	Eye += ActualVel;
 	
 	VECTOR4D TransformEye = Eye;
-	/*TransformEye.x = -Eye.x;
-	TransformEye.y = -Eye.y;
-	TransformEye.z = -Eye.z;
-	TransformEye.w = Eye.w;*/
 	XMatTranslation(TM, TransformEye);
 	View = TM * View;
 	VP = View * Projection;

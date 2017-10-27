@@ -7,6 +7,7 @@ void MeshGL::Create(char * filename) {
 	char *vsSourceP = file2string("VS_Mesh.glsl");
 	char *fsSourceP = file2string("FS_Mesh.glsl");
 
+#ifdef USING_OPENGL_ES
 	GLuint vshader_id = createShader(GL_VERTEX_SHADER, vsSourceP);
 	GLuint fshader_id = createShader(GL_FRAGMENT_SHADER, fsSourceP);
 
@@ -20,12 +21,10 @@ void MeshGL::Create(char * filename) {
 	normalAttribLoc = glGetAttribLocation(shaderID, "Normal");
 	uvAttribLoc = glGetAttribLocation(shaderID, "UV");
 
-
 	diffuseAttribLoc = glGetUniformLocation(shaderID, "Diffuse");
 	lightposLoc = glGetUniformLocation(shaderID, "LightPos");
 	matWorldViewProjUniformLoc = glGetUniformLocation(shaderID, "WVP");
 	matWorldUniformLoc = glGetUniformLocation(shaderID, "World");
-
 
 	P.Parse(filename, MyMeshes);
 
@@ -42,9 +41,12 @@ void MeshGL::Create(char * filename) {
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, MyMeshes[i]->MaterialList[j]->IB);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, MyMeshes[i]->MaterialList[j]->IndexSize * sizeof(unsigned short), &MyMeshes[i]->MaterialList[j]->Material_Index[0], GL_STATIC_DRAW);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		}		
+		}
 	}
 	transform = Identity();
+#elif defined(USING_D3D11)
+
+#endif	
 }
 
 void MeshGL::Transform(float *t)
@@ -54,6 +56,7 @@ void MeshGL::Transform(float *t)
 
 void MeshGL::Draw(float *t, float *vp)
 {
+#ifdef USING_OPENGL_ES
 	glUseProgram(shaderID);
 
 	if (t)
@@ -92,7 +95,7 @@ void MeshGL::Draw(float *t, float *vp)
 		{
 			glVertexAttribPointer(normalAttribLoc, 4, GL_FLOAT, GL_FALSE, sizeof(CVertex4), BUFFER_OFFSET(16));
 		}
-		
+
 		if (uvAttribLoc != -1)
 			glVertexAttribPointer(uvAttribLoc, 2, GL_FLOAT, GL_FALSE, sizeof(CVertex4), BUFFER_OFFSET(32));
 
@@ -103,10 +106,10 @@ void MeshGL::Draw(float *t, float *vp)
 				glActiveTexture(GL_TEXTURE0);
 				glBindTexture(GL_TEXTURE_2D, MyMeshes[i]->MaterialList[j]->diffuse_textID);
 				glUniform1i(diffuseAttribLoc, 0);
-			}			
+			}
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, MyMeshes[i]->MaterialList[j]->IB);
 			glDrawElements(GL_TRIANGLES, MyMeshes[i]->MaterialList[j]->IndexSize, GL_UNSIGNED_SHORT, 0);
-		}		
+		}
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -117,21 +120,24 @@ void MeshGL::Draw(float *t, float *vp)
 		{
 			glDisableVertexAttribArray(normalAttribLoc);
 		}
-		
+
 		if (uvAttribLoc != -1)
 		{
 			glDisableVertexAttribArray(uvAttribLoc);
 		}
-					
+
 	}
 	glUseProgram(0);
+#elif defined (USING_D3D11)
+
+#endif // USING_OPENGL_ES	
 }
 
-//void MeshGL::SetScene(CScene * pScene)
-//{
-//	this->MyScene = pScene;
-//}
-
 void MeshGL::Destroy() {
+#ifdef USING_OPENGL_ES
 	glDeleteProgram(shaderID);
+#elif defined (USING_D3D11)
+
+#endif // USING_OPENGL_ES
+	
 }

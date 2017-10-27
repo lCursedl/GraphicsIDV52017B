@@ -1,8 +1,6 @@
 #ifndef UAD_MESH_GL_H
 #define UAD_MESH_GL_H
 
-//#include <GLES2/gl2.h>
-//#include <GLES2/gl2ext.h>
 #include <d3dx9math.h>
 #include "Parser.h"
 
@@ -17,9 +15,9 @@ public:
 	void Create(char * filename);
 	void Transform(float *t);
 	void Draw(float *t, float *vp);
-	//void SetScene(CScene * pScene);
 	void Destroy();
 
+#ifdef USING_OPENGL_ES
 	GLuint	shaderID;
 	GLint	vertexAttribLoc;
 	GLint	normalAttribLoc;
@@ -29,6 +27,10 @@ public:
 
 	GLint  matWorldViewProjUniformLoc;
 	GLint  matWorldUniformLoc;
+#elif defined (USING_D3D11)
+
+#endif // USING_OPGENL_ES
+	
 
 	MATRIX4D	transform;
 	CParser P;

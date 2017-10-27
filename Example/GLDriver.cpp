@@ -77,6 +77,7 @@ void	GLDriver::InitDriver() {
 	glEnable(GL_DEPTH_TEST);
 	glClearDepthf(1.0f);
 //	glEnable(GL_CULL_FACE);
+	glDisable(GL_CULL_FACE);
 //	glCullFace(GL_FRONT);
 }
 
@@ -100,6 +101,10 @@ void	GLDriver::DestroyDriver() {
 
 void	GLDriver::SetWindow(void *window) {
 	eglWindow = GetActiveWindow();
+}
+
+void GLDriver::SetDimensions(int, int)
+{
 }
 
 void	GLDriver::Clear() {

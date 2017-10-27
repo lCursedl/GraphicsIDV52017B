@@ -1,6 +1,6 @@
 #include "Application.h"
 
-#define LIGHT_COUNT	64
+#define LIGHT_COUNT	1
 
 void TestApp::InitVars() {
 	DtTimer.Init();
@@ -8,7 +8,7 @@ void TestApp::InitVars() {
 	Orientation = VECTOR4D(0.0f, 0.0f, 0.0f);
 	Scaling = VECTOR4D(1.0f, 1.0f, 1.0f);
 
-	MyCamera.Init(VECTOR4D(0.0f, 1.0f, 1.0f), 45.0f * (3.141592f / 180.0f), 1280.0f / 720.0f, 1.0f, 8000.0f, false);
+	MyCamera.Init(VECTOR4D(0.0f, 1.0f, 1.0f), 45.0f * (3.141592f / 180.0f), 1280.0f / 720.0f, 1.0f, 100000.0f);
 	MyCamera.Speed = 10.0f;
 	MyCamera.Eye = VECTOR4D(0.0f, 9.75f, -31.0f, 0.0f);
 	MyCamera.Pitch = 0.14f;
@@ -34,16 +34,14 @@ void TestApp::InitVars() {
 		float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 		float g = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 		float b = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-		MyScene.CreateLight(VECTOR4D(5.f, 0.0f, 0.0f), VECTOR4D(r, g, b), true);
+		MyScene.CreateLight(VECTOR4D(5.f, 0.0f, 0.0f), VECTOR4D(0.0f, 255.0f, 255.0f), true);
 	}
-
-
 }
 
 void TestApp::CreateAssets() {
 	PrimitiveMgr.SetVP(&VP);
 
-	int indexI = PrimitiveMgr.CreateMesh("CerdoNuevo.X");
+	int indexI = PrimitiveMgr.CreateMesh("Scene.X");
 	int indexI2 = PrimitiveMgr.CreateCube();
 	Models[0].CreateInstance(PrimitiveMgr.GetPrimitive(indexI), &VP);
 	Cubes[0].CreateInstance(PrimitiveMgr.GetPrimitive(indexI2), &VP);
@@ -55,8 +53,6 @@ void TestApp::CreateAssets() {
 	View = LookAtRH(Pos, LookAt, Up);
 
 	MATRIX4D Proj = PerspectiveFOVRH(PI, (1280.0f / 720.0f), 0.1, 1000);
-
-	//	D3DXMatrixOrthoRH(&Proj, 1280.0f / 720.0f, 1.0f , 0.1, 100.0f);
 	VP = View*Proj;
 
 	PrimitiveMgr.SetSceneProps(&MyScene);
@@ -96,38 +92,34 @@ void TestApp::OnUpdate() {
 void TestApp::OnDraw() {
 	pFramework->pVideoDriver->Clear();
 	Models[0].Draw();
-	Cubes[0].Draw();
+	//Cubes[0].Draw();
 	pFramework->pVideoDriver->SwapBuffers();
 }
 
 void TestApp::OnInput() {
 	
 	if (IManager.PressedKey(SDLK_UP)) {
-		MyScene.LightContainer[0].Position.y -= 1.0f * DtTimer.GetDTSecs();
-		//Position.y += 1.0f*DtTimer.GetDTSecs();
+		//MyScene.LightContainer[0].Position.y -= 10.0f * DtTimer.GetDTSecs();
 	}
 
 	if (IManager.PressedKey(SDLK_DOWN)) {
-		MyScene.LightContainer[0].Position.y += 1.0f * DtTimer.GetDTSecs();
-		//Position.y -= 1.0f*DtTimer.GetDTSecs();
+		//MyScene.LightContainer[0].Position.y += 10.0f * DtTimer.GetDTSecs();
 	}
 
 	if (IManager.PressedKey(SDLK_LEFT)) {
-		MyScene.LightContainer[0].Position.x -= 1.0f * DtTimer.GetDTSecs();
-		//Position.x -= 1.0f*DtTimer.GetDTSecs();
+		//MyScene.LightContainer[0].Position.x -= 10.0f * DtTimer.GetDTSecs();
 	}
 
 	if (IManager.PressedKey(SDLK_RIGHT)) {
-		MyScene.LightContainer[0].Position.x += 1.0f * DtTimer.GetDTSecs();
-		//Position.x += 1.0f*DtTimer.GetDTSecs();
+		//MyScene.LightContainer[0].Position.x += 10.0f * DtTimer.GetDTSecs();
 	}
 
 	if (IManager.PressedKey(SDLK_z)) {
-		Position.z -= 1.0f*DtTimer.GetDTSecs();
+		//MyScene.LightContainer[0].Position.z += 10.0f * DtTimer.GetDTSecs();
 	}
 
 	if (IManager.PressedKey(SDLK_x)) {
-		Position.z += 1.0f*DtTimer.GetDTSecs();
+		//MyScene.LightContainer[0].Position.z -= 10.0f * DtTimer.GetDTSecs();		
 	}
 
 	if (IManager.PressedKey(SDLK_KP_PLUS)) {
