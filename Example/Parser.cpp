@@ -181,7 +181,6 @@ void CParser::Parse(const char * Filename, std::vector<Mesh*>&MeshList)
 							if (stemp == _Mesh->MaterialList[j]->Material_ID)
 							{
 								_Mesh->MaterialList[j]->Material_Index.push_back(_Mesh->Indices[i]);
-								_Mesh->MaterialList[j]->MIndex[1] = _Mesh->Indices[i];
 								i++;
 
 								_Mesh->MaterialList[j]->Material_Index.push_back(_Mesh->Indices[i]);
