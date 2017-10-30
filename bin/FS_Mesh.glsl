@@ -7,7 +7,7 @@ uniform highp vec4 LightPos;
 
 void main(){
 	
-	highp vec3 veclight = VecPosition.xyz - LightPos.xyz;
+	highp vec3 veclight = LightPos.xyz - VecPosition.xyz;
 	veclight = normalize(veclight);
 	highp vec3 vecNormal = normalize(vecTransformed);
 	
@@ -16,7 +16,7 @@ void main(){
 	
 	highp vec3 Color = Diff.rgb;
 	Color = Color * Att;
-	Color = Color + Diff.rgb * 0.15;
+	Color = Color + Diff.rgb * 0.1;
 	
 	gl_FragColor = vec4(Color, 1.0);
 }

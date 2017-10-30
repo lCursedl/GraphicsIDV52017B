@@ -136,6 +136,5 @@ void TrangleGL::Destroy() {
 #ifdef USING_OPENGL_ES
 	glDeleteProgram(shaderID);
 #elif defined (USING_D3D11)
-
 #endif	
 }

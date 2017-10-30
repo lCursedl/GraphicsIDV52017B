@@ -1,8 +1,13 @@
 #include "CubeGL.h"
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
-void CubeGL::Create() {
+#ifdef USING_D3D11
+extern ComPtr<ID3D11Device>            D3D11Device;
+extern ComPtr<ID3D11DeviceContext>     D3D11DeviceContext;
+#endif
 
+void CubeGL::Create()
+{
 #ifdef USING_OPENGL_ES
 	shaderID = glCreateProgram();
 
@@ -25,102 +30,209 @@ void CubeGL::Create() {
 	matWorldViewProjUniformLoc = glGetUniformLocation(shaderID, "WVP");
 	matWorldUniformLoc = glGetUniformLocation(shaderID, "World");
 
-	// +Y SIDE
-	vertices[0] = { -1.0f,  1.0f, -1.0f, 1.0f,  0.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f };
-	vertices[1] = { 1.0f,  1.0f, -1.0f, 1.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 1.0f };
-	vertices[2] = { -1.0f,  1.0f,  1.0f, 1.0f,  0.0f, 1.0f, 0.0f, 1.0f,  0.0f, 0.0f };
-	vertices[3] = { 1.0f,  1.0f,  1.0f, 1.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f };
-
-	// -Y SIDE
-	vertices[4] = { -1.0f,  -1.0f, -1.0f, 1.0f,  0.0f, -1.0f, 0.0f, 1.0f,  1.0f, 0.0f };
-	vertices[5] = { 1.0f,  -1.0f, -1.0f, 1.0f,  0.0f, -1.0f, 0.0f, 1.0f,  0.0f, 0.0f };
-	vertices[6] = { -1.0f,  -1.0f,  1.0f, 1.0f,  0.0f, -1.0f, 0.0f, 1.0f,  1.0f, 1.0f };
-	vertices[7] = { 1.0f,  -1.0f,  1.0f, 1.0f,  0.0f, -1.0f, 0.0f, 1.0f,  0.0f, 1.0f };
-
-	// +X SIDE
-	vertices[8] = { 1.0f,  1.0f,  1.0f, 1.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 1.0f };
-	vertices[9] = { 1.0f,  1.0f, -1.0f, 1.0f,  1.0f, 0.0f, 0.0f, 1.0f,  1.0f, 1.0f };
-	vertices[10] = { 1.0f, -1.0f,  1.0f, 1.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f };
-	vertices[11] = { 1.0f, -1.0f, -1.0f, 1.0f,  1.0f, 0.0f, 0.0f, 1.0f,  1.0f, 0.0f };
-
-	// -X SIDE
-	vertices[12] = { -1.0f,  1.0f,  1.0f, 1.0f,  -1.0f, 0.0f, 0.0f, 1.0f,  1.0f, 0.0f };
-	vertices[13] = { -1.0f,  1.0f, -1.0f, 1.0f,  -1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f };
-	vertices[14] = { -1.0f, -1.0f,  1.0f, 1.0f,  -1.0f, 0.0f, 0.0f, 1.0f,  1.0f, 1.0f };
-	vertices[15] = { -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 1.0f };
-
-	// +Z SIDE
-	vertices[16] = { -1.0f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f, 1.0f,  0.0f, 1.0f };
-	vertices[17] = { 1.0f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f };
-	vertices[18] = { -1.0f, -1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f, 1.0f,  0.0f, 0.0f };
-	vertices[19] = { 1.0f, -1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 0.0f };
-
-	// -Z SIDE
-	vertices[20] = { -1.0f,  1.0f, -1.0f, 1.0f,  0.0f, 0.0f, -1.0f, 1.0f,  1.0f, 0.0f };
-	vertices[21] = { 1.0f,  1.0f, -1.0f, 1.0f,  0.0f, 0.0f, -1.0f, 1.0f,  0.0f, 0.0f };
-	vertices[22] = { -1.0f, -1.0f, -1.0f, 1.0f,  0.0f, 0.0f, -1.0f, 1.0f,  1.0f, 1.0f };
-	vertices[23] = { 1.0f, -1.0f, -1.0f, 1.0f,  0.0f, 0.0f, -1.0f, 1.0f,  0.0f, 1.0f };
-
-	glGenBuffers(1, &VB);
-	glBindBuffer(GL_ARRAY_BUFFER, VB);
-	glBufferData(GL_ARRAY_BUFFER, 24 * sizeof(CVertex), &vertices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	// +X
-	indices[0] = 8;
-	indices[1] = 9;
-	indices[2] = 10;
-	indices[3] = 9;
-	indices[4] = 11;
-	indices[5] = 10;
-
-	// -X
-	indices[6] = 14;
-	indices[7] = 13;
-	indices[8] = 12;
-	indices[9] = 14;
-	indices[10] = 15;
-	indices[11] = 13;
-
-	// +Y
-	indices[12] = 1;
-	indices[13] = 2;
-	indices[14] = 0;
-	indices[15] = 3;
-	indices[16] = 2;
-	indices[17] = 1;
-
-	// -Y
-	indices[18] = 4;
-	indices[19] = 6;
-	indices[20] = 5;
-	indices[21] = 5;
-	indices[22] = 6;
-	indices[23] = 7;
-
-	// +Z
-	indices[24] = 17;
-	indices[25] = 18;
-	indices[26] = 16;
-	indices[27] = 19;
-	indices[28] = 18;
-	indices[29] = 17;
-
-	// -Z
-	indices[30] = 20;
-	indices[31] = 22;
-	indices[32] = 21;
-	indices[33] = 21;
-	indices[34] = 22;
-	indices[35] = 23;
-
-	glGenBuffers(1, &IB);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 36 * sizeof(unsigned short), indices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 #elif defined (USING_D3D11)
+	char *vsSourceP = file2string("VS.hlsl");
+	char *fsSourceP = file2string("FS.hlsl");
 
-#endif	
+	if (!vsSourceP || !fsSourceP)
+	{
+		exit(32);
+	}
+
+	HRESULT hr;
+	{
+		VS_blob = nullptr;
+		ComPtr<ID3DBlob> errorBlob = nullptr;
+		hr = D3DCompile(vsSourceP, (UINT)strlen(vsSourceP), 0, 0, 0, "VS", "vs_5_0", 0, 0, &VS_blob, &errorBlob);
+		if (hr != S_OK)
+		{
+			if (errorBlob)
+			{
+				printf("errorBlob shader[%s]", (char*)errorBlob->GetBufferPointer());
+				return;
+			}
+			if (VS_blob)
+			{
+				return;
+			}
+		}
+
+		hr = D3D11Device->CreateVertexShader(VS_blob->GetBufferPointer(), VS_blob->GetBufferSize(), 0, &pVS);
+		if (hr != S_OK) {
+			printf("Error Creating Vertex Shader\n");
+			return;
+		}
+	}
+		FS_blob = nullptr;
+		ComPtr<ID3DBlob> errorBlob = nullptr;
+		hr = D3DCompile(fsSourceP, (UINT)strlen(fsSourceP), 0, 0, 0, "FS", "ps_5_0", 0, 0, &FS_blob, &errorBlob);
+		if (hr != S_OK) {
+			if (errorBlob) {
+				printf("errorBlob shader[%s]", (char*)errorBlob->GetBufferPointer());
+				return;
+			}
+
+			if (FS_blob) {
+				return;
+			}
+		}
+
+		hr = D3D11Device->CreatePixelShader(FS_blob->GetBufferPointer(), FS_blob->GetBufferSize(), 0, &pFS);
+		if (hr != S_OK) {
+			printf("Error Creating Pixel Shader\n");
+			return;
+		}
+#endif
+		// +Y SIDE
+		vertices[0] = { -1.0f,  1.0f, -1.0f, 1.0f,  0.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f };
+		vertices[1] = { 1.0f,  1.0f, -1.0f, 1.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 1.0f };
+		vertices[2] = { -1.0f,  1.0f,  1.0f, 1.0f,  0.0f, 1.0f, 0.0f, 1.0f,  0.0f, 0.0f };
+		vertices[3] = { 1.0f,  1.0f,  1.0f, 1.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f };
+
+		// -Y SIDE
+		vertices[4] = { -1.0f,  -1.0f, -1.0f, 1.0f,  0.0f, -1.0f, 0.0f, 1.0f,  1.0f, 0.0f };
+		vertices[5] = { 1.0f,  -1.0f, -1.0f, 1.0f,  0.0f, -1.0f, 0.0f, 1.0f,  0.0f, 0.0f };
+		vertices[6] = { -1.0f,  -1.0f,  1.0f, 1.0f,  0.0f, -1.0f, 0.0f, 1.0f,  1.0f, 1.0f };
+		vertices[7] = { 1.0f,  -1.0f,  1.0f, 1.0f,  0.0f, -1.0f, 0.0f, 1.0f,  0.0f, 1.0f };
+
+		// +X SIDE
+		vertices[8] = { 1.0f,  1.0f,  1.0f, 1.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 1.0f };
+		vertices[9] = { 1.0f,  1.0f, -1.0f, 1.0f,  1.0f, 0.0f, 0.0f, 1.0f,  1.0f, 1.0f };
+		vertices[10] = { 1.0f, -1.0f,  1.0f, 1.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f };
+		vertices[11] = { 1.0f, -1.0f, -1.0f, 1.0f,  1.0f, 0.0f, 0.0f, 1.0f,  1.0f, 0.0f };
+
+		// -X SIDE
+		vertices[12] = { -1.0f,  1.0f,  1.0f, 1.0f,  -1.0f, 0.0f, 0.0f, 1.0f,  1.0f, 0.0f };
+		vertices[13] = { -1.0f,  1.0f, -1.0f, 1.0f,  -1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f };
+		vertices[14] = { -1.0f, -1.0f,  1.0f, 1.0f,  -1.0f, 0.0f, 0.0f, 1.0f,  1.0f, 1.0f };
+		vertices[15] = { -1.0f, -1.0f, -1.0f, 1.0f,  -1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 1.0f };
+
+		// +Z SIDE
+		vertices[16] = { -1.0f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f, 1.0f,  0.0f, 1.0f };
+		vertices[17] = { 1.0f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f };
+		vertices[18] = { -1.0f, -1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f, 1.0f,  0.0f, 0.0f };
+		vertices[19] = { 1.0f, -1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 0.0f };
+
+		// -Z SIDE
+		vertices[20] = { -1.0f,  1.0f, -1.0f, 1.0f,  0.0f, 0.0f, -1.0f, 1.0f,  1.0f, 0.0f };
+		vertices[21] = { 1.0f,  1.0f, -1.0f, 1.0f,  0.0f, 0.0f, -1.0f, 1.0f,  0.0f, 0.0f };
+		vertices[22] = { -1.0f, -1.0f, -1.0f, 1.0f,  0.0f, 0.0f, -1.0f, 1.0f,  1.0f, 1.0f };
+		vertices[23] = { 1.0f, -1.0f, -1.0f, 1.0f,  0.0f, 0.0f, -1.0f, 1.0f,  0.0f, 1.0f };
+
+		// +X
+		indices[0] = 8;
+		indices[1] = 9;
+		indices[2] = 10;
+		indices[3] = 9;
+		indices[4] = 11;
+		indices[5] = 10;
+
+		// -X
+		indices[6] = 14;
+		indices[7] = 13;
+		indices[8] = 12;
+		indices[9] = 14;
+		indices[10] = 15;
+		indices[11] = 13;
+
+		// +Y
+		indices[12] = 1;
+		indices[13] = 2;
+		indices[14] = 0;
+		indices[15] = 3;
+		indices[16] = 2;
+		indices[17] = 1;
+
+		// -Y
+		indices[18] = 4;
+		indices[19] = 6;
+		indices[20] = 5;
+		indices[21] = 5;
+		indices[22] = 6;
+		indices[23] = 7;
+
+		// +Z
+		indices[24] = 17;
+		indices[25] = 18;
+		indices[26] = 16;
+		indices[27] = 19;
+		indices[28] = 18;
+		indices[29] = 17;
+
+		// -Z
+		indices[30] = 20;
+		indices[31] = 22;
+		indices[32] = 21;
+		indices[33] = 21;
+		indices[34] = 22;
+		indices[35] = 23;		
+
+#ifdef USING_OPENGL_ES
+		glGenBuffers(1, &VB);
+		glBindBuffer(GL_ARRAY_BUFFER, VB);
+		glBufferData(GL_ARRAY_BUFFER, 24 * sizeof(CVertex), &vertices, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glGenBuffers(1, &IB);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, 36 * sizeof(unsigned short), indices, GL_STATIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+#elif defined (USING_D3D11)
+		D3D11DeviceContext->VSSetShader(pVS.Get(), 0, 0);
+		D3D11DeviceContext->PSSetShader(pFS.Get(), 0, 0);
+
+		D3D11_INPUT_ELEMENT_DESC vertexDeclaration[] = {
+			{ "POSITION" , 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "NORMAL"   , 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD" , 0, DXGI_FORMAT_R32G32_FLOAT,       0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		};
+
+		hr = D3D11Device->CreateInputLayout(vertexDeclaration, ARRAYSIZE(vertexDeclaration), VS_blob->GetBufferPointer(), VS_blob->GetBufferSize(), &Layout);
+		if (hr != S_OK) {
+			printf("Error Creating Input Layout\n");
+			return;
+		}
+		D3D11DeviceContext->IASetInputLayout(Layout.Get());
+
+		D3D11_BUFFER_DESC bdesc = { 0 };
+		bdesc.Usage = D3D11_USAGE_DEFAULT;
+		bdesc.ByteWidth = sizeof(CubeGL::CBuffer);
+		bdesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+
+		hr = D3D11Device->CreateBuffer(&bdesc, 0, pd3dConstantBuffer.GetAddressOf());
+		if (hr != S_OK) {
+			printf("Error Creating Buffer Layout\n");
+			return;
+		}
+
+		D3D11DeviceContext->VSSetConstantBuffers(0, 1, pd3dConstantBuffer.GetAddressOf());
+		D3D11DeviceContext->PSSetConstantBuffers(0, 1, pd3dConstantBuffer.GetAddressOf());
+
+		bdesc = { 0 };
+		bdesc.ByteWidth = sizeof(CVertex) * 24;
+		bdesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		D3D11_SUBRESOURCE_DATA subData = { vertices, 0, 0 };
+
+		hr = D3D11Device->CreateBuffer(&bdesc, &subData, &VB);
+		if (hr != S_OK) {
+			printf("Error Creating Vertex Buffer\n");
+			return;
+		}
+
+		bdesc = { 0 };
+		bdesc.ByteWidth = 36 * sizeof(USHORT);
+		bdesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+
+		subData = { indices, 0, 0 };
+
+		hr = D3D11Device->CreateBuffer(&bdesc, &subData, &IB);
+		if (hr != S_OK) {
+			printf("Error Creating Index Buffer\n");
+			return;
+		}
+#endif
+		transform = Identity();
 }
 
 void CubeGL::Transform(float *t) {
@@ -173,7 +285,31 @@ void CubeGL::Draw(float *t,float *vp) {
 
 	glUseProgram(0);
 #elif defined (USING_D3D11)
+	if (t)
+		transform = t;
 
+	MATRIX4D VP = MATRIX4D(vp);
+	MATRIX4D WVP = transform*VP;
+	CnstBuffer.WVP = WVP;
+	CnstBuffer.World = transform;
+
+	UINT stride = sizeof(CVertex);
+	UINT offset = 0;
+	D3D11DeviceContext->VSSetShader(pVS.Get(), 0, 0);
+	D3D11DeviceContext->PSSetShader(pFS.Get(), 0, 0);
+
+	D3D11DeviceContext->IASetInputLayout(Layout.Get());
+
+	D3D11DeviceContext->UpdateSubresource(pd3dConstantBuffer.Get(), 0, 0, &CnstBuffer, 0, 0);
+
+	D3D11DeviceContext->VSSetConstantBuffers(0, 1, pd3dConstantBuffer.GetAddressOf());
+	D3D11DeviceContext->PSSetConstantBuffers(0, 1, pd3dConstantBuffer.GetAddressOf());
+
+	D3D11DeviceContext->IASetVertexBuffers(0, 1, VB.GetAddressOf(), &stride, &offset);
+	D3D11DeviceContext->IASetIndexBuffer(IB.Get(), DXGI_FORMAT_R16_UINT, 0);
+
+	D3D11DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	D3D11DeviceContext->DrawIndexed(36, 0, 0);
 #endif	
 }
 

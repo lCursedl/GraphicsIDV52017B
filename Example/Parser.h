@@ -5,8 +5,10 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #elif defined(USING_D3D11)
+#include "D3DXDriver.h"
 #include <d3dcompiler.h>
 #endif
+
 
 #include <iostream>
 #include <string>
@@ -15,6 +17,10 @@
 #include "MATRIX4D.h"
 #include "UtilsGL.h"
 
+#ifdef USING_D3D11
+extern ComPtr<ID3D11Device>            D3D11Device;
+extern ComPtr<ID3D11DeviceContext>     D3D11DeviceContext;
+#endif
 
 struct CVertex4
 {
@@ -29,13 +35,17 @@ struct CVertex4
 struct M_Material
 {
 	unsigned short Material_ID;
+	unsigned short * MIndex;
 	std::vector<unsigned short>Material_Index;
 	int IndexSize = 0;
 #ifdef USING_OPENGL_ES
 	GLuint IB;
 	GLuint diffuse_textID;
 #elif defined (USING_D3D11)
-
+	ComPtr<ID3D11Texture2D>				Tex;
+	ComPtr<ID3D11Buffer>				IB;
+	ComPtr<ID3D11ShaderResourceView>    pSRVTex;
+	ComPtr<ID3D11SamplerState>          pSampler;
 #endif // USING_OPENGL_ES
 	
 	std::string DiffusePath;
@@ -61,6 +71,18 @@ struct Mesh
 	GLuint		IB;
 #elif defined (USING_D3D11)
 
+	struct CBuffer
+	{
+		MATRIX4D WVP;
+		MATRIX4D World;
+	};
+
+	ComPtr<ID3D11Buffer>		IB;
+	ComPtr<ID3D11Buffer>		VB;
+
+	std::vector<D3D11_INPUT_ELEMENT_DESC>	VertexDecl;
+
+	Mesh::CBuffer				CnstBuffer;
 #endif
 	
 };

@@ -8,6 +8,7 @@
 #include <GLES2/gl2ext.h>
 #elif defined (USING_D3D11)
 #include <d3dcompiler.h>
+#include "D3DXDriver.h"
 #endif
 
 
@@ -28,7 +29,19 @@ struct CVertex {
 
 class CubeGL : public PrimitiveBase {
 public:
-	CubeGL() : shaderID(0) {}
+	CubeGL() 
+#ifdef USING_OPENGL_ES
+		: shaderID(0)
+#endif
+	{}
+
+#ifdef USING_D3D11
+	struct CBuffer
+	{
+		MATRIX4D WVP;
+		MATRIX4D World;
+	};
+#endif
 	void Create();
 	void Create(char *){}
 	void Transform(float *t);
@@ -48,14 +61,21 @@ public:
 	GLuint			IB;
 #elif defined (USING_D3D11)
 
+	ComPtr<ID3D11Buffer>		IB;
+	ComPtr<ID3D11Buffer>		VB;
+	ComPtr<ID3D11VertexShader>  pVS;
+	ComPtr<ID3D11PixelShader>   pFS;
+	ComPtr<ID3DBlob>            VS_blob;
+	ComPtr<ID3DBlob>            FS_blob;
+	ComPtr<ID3D11InputLayout>   Layout;
+	ComPtr<ID3D11Buffer>        pd3dConstantBuffer;
+
+	CubeGL::CBuffer	CnstBuffer;
 #endif	
 
 	CVertex			vertices[24];
-	unsigned short	indices[36];
-	
+	unsigned short	indices[36];	
 
 	MATRIX4D	transform;
 };
-
-
 #endif

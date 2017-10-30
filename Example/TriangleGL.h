@@ -39,7 +39,11 @@ struct triVertex {
 
 	class TrangleGL : public PrimitiveBase {
 	public:
-		TrangleGL() : shaderID(0) {}
+		TrangleGL()
+#ifdef USING_OPENGL_ES
+			: shaderID(0) 
+#endif
+		{}
 		void Create();
 		void Create(char *) {}
 		void Transform(float *t);

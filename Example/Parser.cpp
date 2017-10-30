@@ -181,6 +181,7 @@ void CParser::Parse(const char * Filename, std::vector<Mesh*>&MeshList)
 							if (stemp == _Mesh->MaterialList[j]->Material_ID)
 							{
 								_Mesh->MaterialList[j]->Material_Index.push_back(_Mesh->Indices[i]);
+								_Mesh->MaterialList[j]->MIndex[1] = _Mesh->Indices[i];
 								i++;
 
 								_Mesh->MaterialList[j]->Material_Index.push_back(_Mesh->Indices[i]);
@@ -217,6 +218,33 @@ void CParser::Parse(const char * Filename, std::vector<Mesh*>&MeshList)
 						glGenerateMipmap(GL_TEXTURE_2D);
 #elif defined(USING_D3D11)
 
+						D3D11_TEXTURE2D_DESC desc = { 0 };
+						desc.Width = x;
+						desc.Height = y;
+						desc.ArraySize = 1;
+						desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+						desc.SampleDesc.Count = 1;
+						desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+						desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
+
+						D3D11_SUBRESOURCE_DATA initData{};
+						initData.pSysMem = buffer;
+						initData.SysMemPitch = sizeof(unsigned char) * x * 4;
+
+						D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+						srvDesc.Format = desc.Format;
+						srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+						srvDesc.Texture2D.MipLevels = -1;
+
+						HRESULT hr = D3D11Device->CreateTexture2D(&desc, nullptr, _Mesh->MaterialList[diffuse_count]->Tex.GetAddressOf());
+						if (hr != S_OK) {
+							_Mesh->MaterialList[diffuse_count]->Material_ID = -1;
+							std::cout << "Error creating Texture D3DDevice" << std::endl;
+						}
+
+						D3D11Device->CreateShaderResourceView(_Mesh->MaterialList[diffuse_count]->Tex.Get(), &srvDesc, _Mesh->MaterialList[diffuse_count]->pSRVTex.GetAddressOf());
+						D3D11DeviceContext->UpdateSubresource(_Mesh->MaterialList[diffuse_count]->Tex.Get(), 0, 0, buffer, initData.SysMemPitch, 0);
+						D3D11DeviceContext->GenerateMips(_Mesh->MaterialList[diffuse_count]->pSRVTex.Get());
 #endif
 						++diffuse_count;
 					}

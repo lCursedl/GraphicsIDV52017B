@@ -18,13 +18,6 @@ class PrimitiveInst {
 			RotationY = Identity();
 			RotationZ = Identity();
 			Final = Identity();
-			/*D3DXMatrixIdentity(&Position);
-			D3DXMatrixIdentity(&Scale);
-			D3DXMatrixIdentity(&RotationX);
-			D3DXMatrixIdentity(&RotationY);
-			D3DXMatrixIdentity(&RotationZ);
-			D3DXMatrixIdentity(&RotationZ);
-			D3DXMatrixIdentity(&Final);		*/	
 		}
 
 		void	TranslateAbsolute(float x, float y, float z);
@@ -50,15 +43,6 @@ class PrimitiveInst {
 		MATRIX4D		Final;
 
 		MATRIX4D		*pViewProj;
-		
-		/*D3DXMATRIX		Position;
-		D3DXMATRIX		Scale;
-		D3DXMATRIX		RotationX;
-		D3DXMATRIX		RotationY;
-		D3DXMATRIX		RotationZ;
-		D3DXMATRIX		Final;*/
-
-		//D3DXMATRIX		*pViewProj;
 
 		PrimitiveBase	*pBase;
 };

@@ -1,13 +1,16 @@
 #include "Mesh.h"
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
+
+
 void MeshGL::Create(char * filename) {
+#ifdef USING_OPENGL_ES
+
 	shaderID = glCreateProgram();
 
 	char *vsSourceP = file2string("VS_Mesh.glsl");
 	char *fsSourceP = file2string("FS_Mesh.glsl");
 
-#ifdef USING_OPENGL_ES
 	GLuint vshader_id = createShader(GL_VERTEX_SHADER, vsSourceP);
 	GLuint fshader_id = createShader(GL_FRAGMENT_SHADER, fsSourceP);
 
@@ -45,7 +48,123 @@ void MeshGL::Create(char * filename) {
 	}
 	transform = Identity();
 #elif defined(USING_D3D11)
+	char *vsSourceP = file2string("Shaders/VS.hlsl");
+	char *fsSourceP = file2string("Shaders/FS.hlsl");
 
+	if (!vsSourceP || !fsSourceP)
+		exit(32);	
+
+	HRESULT hr;
+	{
+		VS_blob = nullptr;
+		ComPtr<ID3DBlob> errorBlob = nullptr;
+		hr = D3DCompile(vsSourceP, (UINT)strlen(vsSourceP), 0, 0, 0, "VS", "vs_5_0", 0, 0, &VS_blob, &errorBlob);
+		if (hr != S_OK) {
+
+			if (errorBlob) {
+				printf("errorBlob shader[%s]", (char*)errorBlob->GetBufferPointer());
+				return;
+			}
+
+			if (VS_blob) {
+				return;
+			}
+		}
+
+		hr = D3D11Device->CreateVertexShader(VS_blob->GetBufferPointer(), VS_blob->GetBufferSize(), 0, &pVS);
+		if (hr != S_OK) {
+			printf("Error Creating Vertex Shader\n");
+			return;
+		}
+	}
+
+	{
+		FS_blob = nullptr;
+		ComPtr<ID3DBlob> errorBlob = nullptr;
+		hr = D3DCompile(fsSourceP, (UINT)strlen(fsSourceP), 0, 0, 0, "FS", "ps_5_0", 0, 0, &FS_blob, &errorBlob);
+		if (hr != S_OK) {
+			if (errorBlob) {
+				printf("errorBlob shader[%s]", (char*)errorBlob->GetBufferPointer());
+				return;
+			}
+
+			if (FS_blob) {
+				return;
+			}
+		}
+
+		hr = D3D11Device->CreatePixelShader(FS_blob->GetBufferPointer(), FS_blob->GetBufferSize(), 0, &pFS);
+		if (hr != S_OK) {
+			printf("Error Creating Pixel Shader\n");
+			return;
+		}
+	}
+	
+	free(vsSourceP);
+	free(fsSourceP);
+
+	P.Parse(filename, MyMeshes);
+
+	D3D11DeviceContext->VSSetShader(pVS.Get(), 0, 0);
+	D3D11DeviceContext->PSSetShader(pFS.Get(), 0, 0);
+
+	D3D11_INPUT_ELEMENT_DESC vertexDeclaration[] = {
+		{ "POSITION" , 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL"   , 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD" , 0, DXGI_FORMAT_R32G32_FLOAT,       0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+
+	D3D11DeviceContext->IASetInputLayout(Layout.Get());
+
+	D3D11_BUFFER_DESC bdesc = { 0 };
+	bdesc.Usage = D3D11_USAGE_DEFAULT;
+	bdesc.ByteWidth = sizeof(MeshGL::CBuffer);
+	bdesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+
+	hr = D3D11Device->CreateBuffer(&bdesc, 0, pd3dConstantBuffer.GetAddressOf());
+	if (hr != S_OK) {
+		printf("Error Creating Buffer Layout\n");
+		return;
+	}
+
+	D3D11DeviceContext->VSSetConstantBuffers(0, 1, pd3dConstantBuffer.GetAddressOf());
+	D3D11DeviceContext->PSSetConstantBuffers(0, 1, pd3dConstantBuffer.GetAddressOf());
+
+
+	/*TextureD3D *texd3d = dynamic_cast<TextureD3D*>(tex);
+	D3D11DeviceContext->PSSetShaderResources(0, 1, texd3d->pSRVTex.GetAddressOf());
+	D3D11DeviceContext->PSSetSamplers(0, 1, texd3d->pSampler.GetAddressOf());*/
+
+	for (int i = 0; i < MyMeshes.size(); i++)
+	{
+		bdesc = { 0 };
+		bdesc.ByteWidth = sizeof(CVertex4) * 24;
+		bdesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		D3D11_SUBRESOURCE_DATA subData = { MyMeshes[i]->Vertices, 0, 0 };
+
+		hr = D3D11Device->CreateBuffer(&bdesc, &subData, &MyMeshes[i]->VB);
+		if (hr != S_OK)
+		{
+			printf("Error Creating Vertex Buffer\n");
+			return;
+		}
+
+		for (int j = 0; j < MyMeshes[i]->nMaterials; j++)
+		{
+			bdesc = { 0 };
+			bdesc.ByteWidth = MyMeshes[i]->MaterialList[j]->IndexSize * sizeof(USHORT);
+			bdesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+
+			subData = {MyMeshes[i]->MaterialList[j]->Material_Index, 0, 0 };
+
+			hr = D3D11Device->CreateBuffer(&bdesc, &subData, &MyMeshes[i]->MaterialList[j]->IB);
+			if (hr != S_OK)
+			{
+				printf("Error Creating Index Buffer\n");
+				return;
+			}
+		}
+	}
 #endif	
 }
 

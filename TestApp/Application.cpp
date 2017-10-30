@@ -8,7 +8,7 @@ void TestApp::InitVars() {
 	Orientation = VECTOR4D(0.0f, 0.0f, 0.0f);
 	Scaling = VECTOR4D(1.0f, 1.0f, 1.0f);
 
-	MyCamera.Init(VECTOR4D(0.0f, 1.0f, 1.0f), 45.0f * (3.141592f / 180.0f), 1280.0f / 720.0f, 1.0f, 100000.0f);
+	MyCamera.Init(VECTOR4D(0.0f, 1.0f, 1.0f), 45.0f * (3.141592653589f / 180.0f), 1280.0f / 720.0f, 1.0f, 10000.0f);
 	MyCamera.Speed = 10.0f;
 	MyCamera.Eye = VECTOR4D(0.0f, 9.75f, -31.0f, 0.0f);
 	MyCamera.Pitch = 0.14f;
@@ -16,7 +16,7 @@ void TestApp::InitVars() {
 	MyCamera.Yaw = 0.020f;
 	MyCamera.Update(0.0f);
 
-	LightCamera.Init(VECTOR4D(0.0f, 1.0f, 10.0f, 0.0f), 60.0f * (3.141592f / 180.0f), 1.0f, 0.1f, 8000.0f, false);
+	LightCamera.Init(VECTOR4D(0.0f, 1.0f, 10.0f, 0.0f), 60.0f * (3.141592653589f / 180.0f), 1.0f, 0.1f, 8000.0f, false);
 	LightCamera.Speed = 10.0f;
 	LightCamera.Eye = VECTOR4D(0.0f, 25.0f, -40.0f, 0.0f);
 	LightCamera.Pitch = 0.14f;
@@ -43,17 +43,21 @@ void TestApp::CreateAssets() {
 
 	int indexI = PrimitiveMgr.CreateMesh("Scene.X");
 	int indexI2 = PrimitiveMgr.CreateCube();
+	int indexI3 = PrimitiveMgr.CreateMesh("CerdoNuevo.X");
+	int indexI4 = PrimitiveMgr.CreateMesh("NuBatman.X");
 	Models[0].CreateInstance(PrimitiveMgr.GetPrimitive(indexI), &VP);
 	Cubes[0].CreateInstance(PrimitiveMgr.GetPrimitive(indexI2), &VP);
+	Models[1].CreateInstance(PrimitiveMgr.GetPrimitive(indexI3), &VP);
+	Models[2].CreateInstance(PrimitiveMgr.GetPrimitive(indexI4), &VP);
 
-	MATRIX4D View;
-	VECTOR4D Pos		= VECTOR4D(0.0f,1.0f,5.0f);
-	VECTOR4D Up			= VECTOR4D(0.0f,1.0f,0.0f);
-	VECTOR4D LookAt		= VECTOR4D(0.0001f, 0.0001f, 0.0001f) - Pos;
-	View = LookAtRH(Pos, LookAt, Up);
+	//MATRIX4D View;
+	//VECTOR4D Pos		= VECTOR4D(0.0f,1.0f,5.0f);
+	//VECTOR4D Up			= VECTOR4D(0.0f,1.0f,0.0f);
+	//VECTOR4D LookAt		= VECTOR4D(0.0001f, 0.0001f, 0.0001f) - Pos;
+	//View = LookAtRH(Pos, LookAt, Up);
 
-	MATRIX4D Proj = PerspectiveFOVRH(PI, (1280.0f / 720.0f), 0.1, 1000);
-	VP = View*Proj;
+	//*MATRIX4D*/ Projection = PerspectiveFOVRH(PI, (1280.0f / 720.0f), 0.1, 1000);
+	//VP = View*Projection;
 
 	PrimitiveMgr.SetSceneProps(&MyScene);
 }
@@ -83,49 +87,67 @@ void TestApp::OnUpdate() {
 	Cubes[0].RotateYAbsolute(Orientation.y);
 	Cubes[0].RotateZAbsolute(Orientation.z);
 	Cubes[0].ScaleAbsolute(Scaling.x);
-	Cubes[0].TranslateRelative(-MyScene.LightContainer[0].Position.x, -MyScene.LightContainer[0].Position.y, -MyScene.LightContainer[0].Position.z);
+	Cubes[0].TranslateRelative(MyScene.LightContainer[0].Position.x, MyScene.LightContainer[0].Position.y, MyScene.LightContainer[0].Position.z);
 	Cubes[0].Update();
-	
+
+	Models[1].TranslateAbsolute(Position.x, Position.y, Position.z);
+	Models[1].RotateXAbsolute(Orientation.x);
+	Models[1].RotateYAbsolute(Orientation.y);
+	Models[1].RotateZAbsolute(Orientation.z);
+	Models[1].ScaleAbsolute(Scaling.x);
+	Models[1].Update();
+
+	Models[2].TranslateAbsolute(Position.x, Position.y, Position.z);
+	Models[2].RotateXAbsolute(Orientation.x);
+	Models[2].RotateYAbsolute(Orientation.y);
+	Models[2].RotateZAbsolute(Orientation.z);
+	Models[2].ScaleAbsolute(Scaling.x);
+	Models[2].Update();
+
 	OnDraw();
 }
 
 void TestApp::OnDraw() {
 	pFramework->pVideoDriver->Clear();
 	Models[0].Draw();
-	//Cubes[0].Draw();
+	Cubes[0].Draw();
+	Models[1].Draw();
+	Models[2].Draw();
 	pFramework->pVideoDriver->SwapBuffers();
 }
 
 void TestApp::OnInput() {
 	
 	if (IManager.PressedKey(SDLK_UP)) {
-		//MyScene.LightContainer[0].Position.y -= 10.0f * DtTimer.GetDTSecs();
+		MyScene.LightContainer[0].Position.y += 10.0f * DtTimer.GetDTSecs();
 	}
 
 	if (IManager.PressedKey(SDLK_DOWN)) {
-		//MyScene.LightContainer[0].Position.y += 10.0f * DtTimer.GetDTSecs();
+		MyScene.LightContainer[0].Position.y -= 10.0f * DtTimer.GetDTSecs();
 	}
 
 	if (IManager.PressedKey(SDLK_LEFT)) {
-		//MyScene.LightContainer[0].Position.x -= 10.0f * DtTimer.GetDTSecs();
+		MyScene.LightContainer[0].Position.x -= 10.0f * DtTimer.GetDTSecs();
 	}
 
 	if (IManager.PressedKey(SDLK_RIGHT)) {
-		//MyScene.LightContainer[0].Position.x += 10.0f * DtTimer.GetDTSecs();
+		MyScene.LightContainer[0].Position.x += 10.0f * DtTimer.GetDTSecs();
 	}
 
 	if (IManager.PressedKey(SDLK_z)) {
-		//MyScene.LightContainer[0].Position.z += 10.0f * DtTimer.GetDTSecs();
+		MyScene.LightContainer[0].Position.z += 10.0f * DtTimer.GetDTSecs();
 	}
 
 	if (IManager.PressedKey(SDLK_x)) {
-		//MyScene.LightContainer[0].Position.z -= 10.0f * DtTimer.GetDTSecs();		
+		MyScene.LightContainer[0].Position.z -= 10.0f * DtTimer.GetDTSecs();		
 	}
 
 	if (IManager.PressedKey(SDLK_KP_PLUS)) {
 		Scaling.x += 1.0f*DtTimer.GetDTSecs();
 		Scaling.y += 1.0f*DtTimer.GetDTSecs();
 		Scaling.z += 1.0f*DtTimer.GetDTSecs();
+
+		
 	}
 
 	if (IManager.PressedKey(SDLK_KP_MINUS)) {
@@ -160,12 +182,12 @@ void TestApp::OnInput() {
 
 	if (IManager.PressedKey(SDLK_w))
 	{
-		pCam->MoveFront(Delta);
+		pCam->MoveBack(Delta);
 	}
 
 	if (IManager.PressedKey(SDLK_s))
 	{
-		pCam->MoveBack(Delta);
+		pCam->MoveFront(Delta);
 	}
 
 	if (IManager.PressedKey(SDLK_a))

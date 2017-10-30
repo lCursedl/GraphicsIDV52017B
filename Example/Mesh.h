@@ -10,7 +10,20 @@
 
 class MeshGL : public PrimitiveBase {
 public:
-	MeshGL() : shaderID(0) {}
+
+#ifdef USING_D3D11
+	struct CBuffer
+	{
+		MATRIX4D WVP;
+		MATRIX4D World;
+	};
+#endif
+
+	MeshGL()
+#ifdef USING_OPENGL_ES
+		: shaderID(0)
+#endif
+	{}
 	void Create(){}
 	void Create(char * filename);
 	void Transform(float *t);
@@ -28,7 +41,12 @@ public:
 	GLint  matWorldViewProjUniformLoc;
 	GLint  matWorldUniformLoc;
 #elif defined (USING_D3D11)
-
+	ComPtr<ID3D11VertexShader>  pVS;
+	ComPtr<ID3D11PixelShader>   pFS;
+	ComPtr<ID3DBlob>            VS_blob;
+	ComPtr<ID3DBlob>            FS_blob;
+	ComPtr<ID3D11InputLayout>   Layout;
+	ComPtr<ID3D11Buffer>        pd3dConstantBuffer;
 #endif // USING_OPGENL_ES
 	
 
