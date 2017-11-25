@@ -34,6 +34,8 @@
     <ClInclude Include="PrimitiveInstance.h" />
     <ClInclude Include="PrimitiveManager.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureD3D.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TriangleGL.h" />
     <ClInclude Include="UtilsGL.h" />
@@ -52,6 +54,8 @@
     <ClCompile Include="PrimitiveInstance.cpp" />
     <ClCompile Include="PrimitiveManager.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureD3D.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TriangleGL.cpp" />
     <ClCompile Include="UtilsGL.cpp" />

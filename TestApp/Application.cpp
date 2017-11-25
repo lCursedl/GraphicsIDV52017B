@@ -42,7 +42,7 @@ void TestApp::InitVars() {
 void TestApp::CreateAssets() {
 	PrimitiveMgr.SetVP(&VP);
 
-	int indexI = PrimitiveMgr.CreateMesh("CerdoNuevo.X");
+	int indexI = PrimitiveMgr.CreateMesh("NuBatman.X");
 	/*int indexI2 = PrimitiveMgr.CreateCube();
 	int indexI3 = PrimitiveMgr.CreateMesh("CerdoNuevo.X");
 	int indexI4 = PrimitiveMgr.CreateMesh("NuBatman.X");*/

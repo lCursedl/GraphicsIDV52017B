@@ -68,6 +68,12 @@
     <ClInclude Include="Configuration.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureD3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core.cpp">
@@ -116,6 +122,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="D3DXDriver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureD3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -142,7 +142,7 @@ void MeshGL::Create(char * filename) {
 	for (int i = 0; i < MyMeshes.size(); i++)
 	{
 		bdesc = { 0 };
-		bdesc.ByteWidth = sizeof(CVertex4);
+		bdesc.ByteWidth = sizeof(CVertex4) * MyMeshes[i]->VertexSize;
 		bdesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		D3D11_SUBRESOURCE_DATA subData = { MyMeshes[i]->Vertices, 0, 0 };
 
@@ -159,7 +159,7 @@ void MeshGL::Create(char * filename) {
 			bdesc.ByteWidth = MyMeshes[i]->MaterialList[j]->IndexSize * sizeof(USHORT);
 			bdesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
-			subData = {&MyMeshes[i]->MaterialList[j]->Material_Index, 0, 0 };
+			subData = {&MyMeshes[i]->MaterialList[j]->Material_Index[0], 0, 0 };
 
 			hr = D3D11Device->CreateBuffer(&bdesc, &subData, &MyMeshes[i]->MaterialList[j]->IB);
 			if (hr != S_OK)
