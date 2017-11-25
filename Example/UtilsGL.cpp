@@ -2,6 +2,7 @@
 #include <stdio.h>    
 #include <stdlib.h>
 
+#ifdef USING_OPENGL_ES
 void checkcompilederrors(GLuint shader, GLenum type) {
 	GLint bShaderCompiled;
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &bShaderCompiled);
@@ -34,6 +35,7 @@ GLuint createShader(GLenum type, char* pSource) {
 	checkcompilederrors(shader, type);
 	return shader;
 }
+#endif // USING_OPENGL_ES
 
 char *file2string(const char *path) {
 	FILE *fd;

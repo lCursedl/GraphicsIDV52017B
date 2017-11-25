@@ -47,6 +47,8 @@ public:
 	ComPtr<ID3DBlob>            FS_blob;
 	ComPtr<ID3D11InputLayout>   Layout;
 	ComPtr<ID3D11Buffer>        pd3dConstantBuffer;
+
+	MeshGL::CBuffer				CnstBuffer;
 #endif // USING_OPGENL_ES
 	
 

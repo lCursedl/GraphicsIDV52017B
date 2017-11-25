@@ -15,40 +15,41 @@ void TestApp::InitVars() {
 	MyCamera.Roll = 0.0f;
 	MyCamera.Yaw = 0.020f;
 	MyCamera.Update(0.0f);
+	MyScene.CreateCamera(pCam);
 
-	LightCamera.Init(VECTOR4D(0.0f, 1.0f, 10.0f, 0.0f), 60.0f * (3.141592653589f / 180.0f), 1.0f, 0.1f, 8000.0f, false);
+	pCam = &MyCamera;
+
+	/*LightCamera.Init(VECTOR4D(0.0f, 1.0f, 10.0f, 0.0f), 60.0f * (3.141592653589f / 180.0f), 1.0f, 0.1f, 8000.0f, false);
 	LightCamera.Speed = 10.0f;
 	LightCamera.Eye = VECTOR4D(0.0f, 25.0f, -40.0f, 0.0f);
 	LightCamera.Pitch = 0.14f;
 	LightCamera.Roll = 0.0f;
 	LightCamera.Yaw = 0.020f;
 	LightCamera.Update(0.0f);
-
-	pCam = &MyCamera;
-	MyScene.CreateCamera(pCam);
+	
 	MyScene.AmbientClr = (.5f, .5f, .5f, 1.0f);
-	MyScene.CreateLightCamera(&LightCamera);
+	MyScene.CreateLightCamera(&LightCamera);*/
 
-	for (int i = 0; i < LIGHT_COUNT; i++)
+	/*for (int i = 0; i < LIGHT_COUNT; i++)
 	{
 		float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 		float g = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 		float b = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 		MyScene.CreateLight(VECTOR4D(5.f, 0.0f, 0.0f), VECTOR4D(0.0f, 255.0f, 255.0f), true);
-	}
+	}*/
 }
 
 void TestApp::CreateAssets() {
 	PrimitiveMgr.SetVP(&VP);
 
-	int indexI = PrimitiveMgr.CreateMesh("Scene.X");
-	int indexI2 = PrimitiveMgr.CreateCube();
+	int indexI = PrimitiveMgr.CreateMesh("CerdoNuevo.X");
+	/*int indexI2 = PrimitiveMgr.CreateCube();
 	int indexI3 = PrimitiveMgr.CreateMesh("CerdoNuevo.X");
-	int indexI4 = PrimitiveMgr.CreateMesh("NuBatman.X");
+	int indexI4 = PrimitiveMgr.CreateMesh("NuBatman.X");*/
 	Models[0].CreateInstance(PrimitiveMgr.GetPrimitive(indexI), &VP);
-	Cubes[0].CreateInstance(PrimitiveMgr.GetPrimitive(indexI2), &VP);
+	/*Cubes[0].CreateInstance(PrimitiveMgr.GetPrimitive(indexI2), &VP);
 	Models[1].CreateInstance(PrimitiveMgr.GetPrimitive(indexI3), &VP);
-	Models[2].CreateInstance(PrimitiveMgr.GetPrimitive(indexI4), &VP);
+	Models[2].CreateInstance(PrimitiveMgr.GetPrimitive(indexI4), &VP);*/
 
 	//MATRIX4D View;
 	//VECTOR4D Pos		= VECTOR4D(0.0f,1.0f,5.0f);
@@ -82,7 +83,7 @@ void TestApp::OnUpdate() {
 	Models[0].ScaleAbsolute(Scaling.x);
 	Models[0].Update();	
 
-	Cubes[0].TranslateAbsolute(Position.x, Position.y, Position.z);
+	/*Cubes[0].TranslateAbsolute(Position.x, Position.y, Position.z);
 	Cubes[0].RotateXAbsolute(Orientation.x);
 	Cubes[0].RotateYAbsolute(Orientation.y);
 	Cubes[0].RotateZAbsolute(Orientation.z);
@@ -102,7 +103,7 @@ void TestApp::OnUpdate() {
 	Models[2].RotateYAbsolute(Orientation.y);
 	Models[2].RotateZAbsolute(Orientation.z);
 	Models[2].ScaleAbsolute(Scaling.x);
-	Models[2].Update();
+	Models[2].Update();*/
 
 	OnDraw();
 }
@@ -110,9 +111,9 @@ void TestApp::OnUpdate() {
 void TestApp::OnDraw() {
 	pFramework->pVideoDriver->Clear();
 	Models[0].Draw();
-	Cubes[0].Draw();
+	/*Cubes[0].Draw();
 	Models[1].Draw();
-	Models[2].Draw();
+	Models[2].Draw();*/
 	pFramework->pVideoDriver->SwapBuffers();
 }
 

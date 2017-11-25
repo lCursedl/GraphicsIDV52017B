@@ -1,8 +1,6 @@
 #include "Mesh.h"
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
-
-
 void MeshGL::Create(char * filename) {
 #ifdef USING_OPENGL_ES
 
@@ -48,8 +46,8 @@ void MeshGL::Create(char * filename) {
 	}
 	transform = Identity();
 #elif defined(USING_D3D11)
-	char *vsSourceP = file2string("Shaders/VS.hlsl");
-	char *fsSourceP = file2string("Shaders/FS.hlsl");
+	char *vsSourceP = file2string("VS.hlsl");
+	char *fsSourceP = file2string("FS.hlsl");
 
 	if (!vsSourceP || !fsSourceP)
 		exit(32);	
@@ -114,6 +112,12 @@ void MeshGL::Create(char * filename) {
 		{ "TEXCOORD" , 0, DXGI_FORMAT_R32G32_FLOAT,       0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
+	hr = D3D11Device->CreateInputLayout(vertexDeclaration, ARRAYSIZE(vertexDeclaration), VS_blob->GetBufferPointer(), VS_blob->GetBufferSize(), &Layout);
+	if (hr != S_OK) {
+		printf("Error Creating Input Layout\n");
+		return;
+	}
+
 	D3D11DeviceContext->IASetInputLayout(Layout.Get());
 
 	D3D11_BUFFER_DESC bdesc = { 0 };
@@ -138,7 +142,7 @@ void MeshGL::Create(char * filename) {
 	for (int i = 0; i < MyMeshes.size(); i++)
 	{
 		bdesc = { 0 };
-		bdesc.ByteWidth = sizeof(CVertex4) * 24;
+		bdesc.ByteWidth = sizeof(CVertex4);
 		bdesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		D3D11_SUBRESOURCE_DATA subData = { MyMeshes[i]->Vertices, 0, 0 };
 
@@ -155,7 +159,7 @@ void MeshGL::Create(char * filename) {
 			bdesc.ByteWidth = MyMeshes[i]->MaterialList[j]->IndexSize * sizeof(USHORT);
 			bdesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
-			subData = {MyMeshes[i]->MaterialList[j]->Material_Index, 0, 0 };
+			subData = {&MyMeshes[i]->MaterialList[j]->Material_Index, 0, 0 };
 
 			hr = D3D11Device->CreateBuffer(&bdesc, &subData, &MyMeshes[i]->MaterialList[j]->IB);
 			if (hr != S_OK)
@@ -165,6 +169,9 @@ void MeshGL::Create(char * filename) {
 			}
 		}
 	}
+
+	transform = Identity();
+
 #endif	
 }
 
@@ -188,9 +195,9 @@ void MeshGL::Draw(float *t, float *vp)
 	glUniformMatrix4fv(matWorldUniformLoc, 1, GL_FALSE, &transform.m[0][0]);
 	glUniformMatrix4fv(matWorldViewProjUniformLoc, 1, GL_FALSE, &WVP.m[0][0]);
 
-	VECTOR4D PosLight(-15.0f, 0.0f, 0.0f);
+	//VECTOR4D PosLight(-15.0f, 0.0f, 0.0f);
 
-	glUniform4fv(lightposLoc, 1, &pScProp->LightContainer[0].Position.x);
+	//glUniform4fv(lightposLoc, 1, &pScProp->LightContainer[0].Position.x);
 
 	for (int i = 0; i < MyMeshes.size(); i++)
 	{
@@ -248,15 +255,45 @@ void MeshGL::Draw(float *t, float *vp)
 	}
 	glUseProgram(0);
 #elif defined (USING_D3D11)
+	if (t)
+		transform = t;
 
+	MATRIX4D VP = MATRIX4D(vp);
+	MATRIX4D WVP = transform*VP;
+	CnstBuffer.WVP = WVP;
+	CnstBuffer.World = transform;
+
+	UINT stride = sizeof(CVertex4);
+	UINT offset = 0;
+	D3D11DeviceContext->VSSetShader(pVS.Get(), 0, 0);
+	D3D11DeviceContext->PSSetShader(pFS.Get(), 0, 0);
+
+	D3D11DeviceContext->IASetInputLayout(Layout.Get());
+
+	D3D11DeviceContext->UpdateSubresource(pd3dConstantBuffer.Get(), 0, 0, &CnstBuffer, 0, 0);
+
+	/*TextureD3D *texd3d = dynamic_cast<TextureD3D*>(tex);
+	D3D11DeviceContext->PSSetShaderResources(0, 1, texd3d->pSRVTex.GetAddressOf());
+	D3D11DeviceContext->PSSetSamplers(0, 1, texd3d->pSampler.GetAddressOf());*/
+
+	D3D11DeviceContext->VSSetConstantBuffers(0, 1, pd3dConstantBuffer.GetAddressOf());
+	D3D11DeviceContext->PSSetConstantBuffers(0, 1, pd3dConstantBuffer.GetAddressOf());
+
+	for (int i = 0; i < MyMeshes.size(); i++)
+	{
+		D3D11DeviceContext->IASetVertexBuffers(0, 1, MyMeshes[i]->VB.GetAddressOf(), &stride, &offset);
+		for (int j = 0; j < MyMeshes[i]->nMaterials; j++)
+		{
+			D3D11DeviceContext->IASetIndexBuffer(MyMeshes[i]->MaterialList[j]->IB.Get(), DXGI_FORMAT_R16_UINT, 0);
+			D3D11DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			D3D11DeviceContext->DrawIndexed(MyMeshes[i]->MaterialList[j]->Material_Index.size(), 0, 0);
+		}
+	}
 #endif // USING_OPENGL_ES	
 }
 
 void MeshGL::Destroy() {
 #ifdef USING_OPENGL_ES
 	glDeleteProgram(shaderID);
-#elif defined (USING_D3D11)
-
-#endif // USING_OPENGL_ES
-	
+#endif // USING_OPENGL_ES	
 }
