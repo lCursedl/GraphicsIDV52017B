@@ -42,14 +42,14 @@ void TestApp::InitVars() {
 void TestApp::CreateAssets() {
 	PrimitiveMgr.SetVP(&VP);
 
-	int indexI = PrimitiveMgr.CreateMesh("NuBatman.X");
-	/*int indexI2 = PrimitiveMgr.CreateCube();
+	int indexI = PrimitiveMgr.CreateMesh("Scene.X");
+	//int indexI2 = PrimitiveMgr.CreateCube();
 	int indexI3 = PrimitiveMgr.CreateMesh("CerdoNuevo.X");
-	int indexI4 = PrimitiveMgr.CreateMesh("NuBatman.X");*/
+	int indexI4 = PrimitiveMgr.CreateMesh("NuBatman.X");
 	Models[0].CreateInstance(PrimitiveMgr.GetPrimitive(indexI), &VP);
-	/*Cubes[0].CreateInstance(PrimitiveMgr.GetPrimitive(indexI2), &VP);
+	//Cubes[0].CreateInstance(PrimitiveMgr.GetPrimitive(indexI2), &VP);
 	Models[1].CreateInstance(PrimitiveMgr.GetPrimitive(indexI3), &VP);
-	Models[2].CreateInstance(PrimitiveMgr.GetPrimitive(indexI4), &VP);*/
+	Models[2].CreateInstance(PrimitiveMgr.GetPrimitive(indexI4), &VP);
 
 	//MATRIX4D View;
 	//VECTOR4D Pos		= VECTOR4D(0.0f,1.0f,5.0f);
@@ -89,7 +89,7 @@ void TestApp::OnUpdate() {
 	Cubes[0].RotateZAbsolute(Orientation.z);
 	Cubes[0].ScaleAbsolute(Scaling.x);
 	Cubes[0].TranslateRelative(MyScene.LightContainer[0].Position.x, MyScene.LightContainer[0].Position.y, MyScene.LightContainer[0].Position.z);
-	Cubes[0].Update();
+	Cubes[0].Update();*/
 
 	Models[1].TranslateAbsolute(Position.x, Position.y, Position.z);
 	Models[1].RotateXAbsolute(Orientation.x);
@@ -103,7 +103,7 @@ void TestApp::OnUpdate() {
 	Models[2].RotateYAbsolute(Orientation.y);
 	Models[2].RotateZAbsolute(Orientation.z);
 	Models[2].ScaleAbsolute(Scaling.x);
-	Models[2].Update();*/
+	Models[2].Update();
 
 	OnDraw();
 }
@@ -111,9 +111,9 @@ void TestApp::OnUpdate() {
 void TestApp::OnDraw() {
 	pFramework->pVideoDriver->Clear();
 	Models[0].Draw();
-	/*Cubes[0].Draw();
+	//Cubes[0].Draw();
 	Models[1].Draw();
-	Models[2].Draw();*/
+	Models[2].Draw();
 	pFramework->pVideoDriver->SwapBuffers();
 }
 

@@ -1,7 +1,8 @@
 #include "Parser.h"
+#ifdef USING_OPENGL_ES
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-
+#endif
 
 CParser::CParser()
 {
@@ -205,10 +206,10 @@ void CParser::Parse(const char * Filename, std::vector<Mesh*>&MeshList)
 					diffuse_count = 0;
 					while (diffuse_count < _Mesh->MaterialList.size())
 					{
+#ifdef USING_OPENGL_ES
 						int x = 0, y = 0, channels = 0;
 						unsigned char *buffer = stbi_load(_Mesh->MaterialList[diffuse_count]->DiffusePath.c_str(), &x, &y, &channels, 0);
 
-#ifdef USING_OPENGL_ES
 						glGenTextures(1, &_Mesh->MaterialList[diffuse_count]->diffuse_textID);
 						glBindTexture(GL_TEXTURE_2D, _Mesh->MaterialList[diffuse_count]->diffuse_textID);
 
@@ -217,7 +218,7 @@ void CParser::Parse(const char * Filename, std::vector<Mesh*>&MeshList)
 						glGenerateMipmap(GL_TEXTURE_2D);
 #elif defined(USING_D3D11)
 
-						D3D11_TEXTURE2D_DESC desc = { 0 };
+						/*D3D11_TEXTURE2D_DESC desc = { 0 };
 						desc.Width = x;
 						desc.Height = y;
 						desc.ArraySize = 1;
@@ -243,7 +244,18 @@ void CParser::Parse(const char * Filename, std::vector<Mesh*>&MeshList)
 
 						D3D11Device->CreateShaderResourceView(_Mesh->MaterialList[diffuse_count]->Tex.Get(), &srvDesc, _Mesh->MaterialList[diffuse_count]->pSRVTex.GetAddressOf());
 						D3D11DeviceContext->UpdateSubresource(_Mesh->MaterialList[diffuse_count]->Tex.Get(), 0, 0, buffer, initData.SysMemPitch, 0);
-						D3D11DeviceContext->GenerateMips(_Mesh->MaterialList[diffuse_count]->pSRVTex.Get());
+						D3D11DeviceContext->GenerateMips(_Mesh->MaterialList[diffuse_count]->pSRVTex.Get());*/
+						CTexture * tex = new CTextureD3D;
+						unsigned int id = tex->LoadTexture((char*)_Mesh->MaterialList[diffuse_count]->DiffusePath.c_str());
+						/*unsigned int params = TEXT_BASIC_PARAMS::MIPMAPS;
+						params |= TEXT_BASIC_PARAMS::CLAMP_TO_EDGE;
+						tex->params = params;
+						tex->SetTextureParams(id);*/
+						if (id != -1)
+						{
+							_Mesh->MaterialList[diffuse_count]->Diffuse = tex;
+						}
+
 #endif
 						++diffuse_count;
 					}

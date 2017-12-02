@@ -7,6 +7,7 @@
 #elif defined(USING_D3D11)
 #include "D3DXDriver.h"
 #include <d3dcompiler.h>
+#include "TextureD3D.h"
 #endif
 
 
@@ -46,6 +47,7 @@ struct M_Material
 	ComPtr<ID3D11Buffer>				IB;
 	ComPtr<ID3D11ShaderResourceView>    pSRVTex;
 	ComPtr<ID3D11SamplerState>          pSampler;
+	CTexture *							Diffuse;
 #endif // USING_OPENGL_ES
 	
 	std::string DiffusePath;

@@ -135,7 +135,7 @@ void MeshGL::Create(char * filename) {
 	D3D11DeviceContext->PSSetConstantBuffers(0, 1, pd3dConstantBuffer.GetAddressOf());
 
 
-	/*TextureD3D *texd3d = dynamic_cast<TextureD3D*>(tex);
+	/*CTextureD3D *texd3d = dynamic_cast<CTextureD3D*>(tex);
 	D3D11DeviceContext->PSSetShaderResources(0, 1, texd3d->pSRVTex.GetAddressOf());
 	D3D11DeviceContext->PSSetSamplers(0, 1, texd3d->pSampler.GetAddressOf());*/
 
@@ -284,9 +284,13 @@ void MeshGL::Draw(float *t, float *vp)
 		D3D11DeviceContext->IASetVertexBuffers(0, 1, MyMeshes[i]->VB.GetAddressOf(), &stride, &offset);
 		for (int j = 0; j < MyMeshes[i]->nMaterials; j++)
 		{
+			CTextureD3D *texd3d = dynamic_cast<CTextureD3D*>(MyMeshes[i]->MaterialList[j]->Diffuse);
+			D3D11DeviceContext->PSSetShaderResources(0, 1, texd3d->pSRVTex.GetAddressOf());
+			D3D11DeviceContext->PSSetSamplers(0, 1, texd3d->pSampler.GetAddressOf());
+
 			D3D11DeviceContext->IASetIndexBuffer(MyMeshes[i]->MaterialList[j]->IB.Get(), DXGI_FORMAT_R16_UINT, 0);
 			D3D11DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-			D3D11DeviceContext->DrawIndexed(MyMeshes[i]->MaterialList[j]->Material_Index.size(), 0, 0);
+			D3D11DeviceContext->DrawIndexed(MyMeshes[i]->MaterialList[j]->Material_Index.size(), 0, 0);			
 		}
 	}
 #endif // USING_OPENGL_ES	
