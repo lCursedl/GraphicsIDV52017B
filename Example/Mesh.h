@@ -16,6 +16,10 @@ public:
 	{
 		MATRIX4D WVP;
 		MATRIX4D World;
+		VECTOR4D Light0Pos;
+		VECTOR4D Light0Col;
+		VECTOR4D CameraPos;
+		VECTOR4D Ambient;
 	};
 #endif
 

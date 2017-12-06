@@ -43,10 +43,10 @@ struct M_Material
 	GLuint IB;
 	GLuint diffuse_textID;
 #elif defined (USING_D3D11)
-	ComPtr<ID3D11Texture2D>				Tex;
+	//ComPtr<ID3D11Texture2D>				Tex;
 	ComPtr<ID3D11Buffer>				IB;
-	ComPtr<ID3D11ShaderResourceView>    pSRVTex;
-	ComPtr<ID3D11SamplerState>          pSampler;
+	//ComPtr<ID3D11ShaderResourceView>    pSRVTex;
+	//ComPtr<ID3D11SamplerState>          pSampler;
 	CTexture *							Diffuse;
 #endif // USING_OPENGL_ES
 	
@@ -77,6 +77,10 @@ struct Mesh
 	{
 		MATRIX4D WVP;
 		MATRIX4D World;
+		CVertex4 Light0Pos;
+		CVertex4 Light0Col;
+		CVertex4 CameraPos;
+		CVertex4 Ambient;
 	};
 
 	ComPtr<ID3D11Buffer>		IB;

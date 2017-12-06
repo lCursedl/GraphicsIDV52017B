@@ -134,11 +134,6 @@ void MeshGL::Create(char * filename) {
 	D3D11DeviceContext->VSSetConstantBuffers(0, 1, pd3dConstantBuffer.GetAddressOf());
 	D3D11DeviceContext->PSSetConstantBuffers(0, 1, pd3dConstantBuffer.GetAddressOf());
 
-
-	/*CTextureD3D *texd3d = dynamic_cast<CTextureD3D*>(tex);
-	D3D11DeviceContext->PSSetShaderResources(0, 1, texd3d->pSRVTex.GetAddressOf());
-	D3D11DeviceContext->PSSetSamplers(0, 1, texd3d->pSampler.GetAddressOf());*/
-
 	for (int i = 0; i < MyMeshes.size(); i++)
 	{
 		bdesc = { 0 };
@@ -262,6 +257,12 @@ void MeshGL::Draw(float *t, float *vp)
 	MATRIX4D WVP = transform*VP;
 	CnstBuffer.WVP = WVP;
 	CnstBuffer.World = transform;
+	CnstBuffer.Light0Pos = pScProp->LightContainer[0].Position;
+	CnstBuffer.Light0Col = pScProp->LightContainer[0].Color;
+
+	CnstBuffer.CameraPos = pScProp->CameraContainer[0]->Eye;
+
+	CnstBuffer.Ambient = pScProp->AmbientClr;
 
 	UINT stride = sizeof(CVertex4);
 	UINT offset = 0;
@@ -271,10 +272,6 @@ void MeshGL::Draw(float *t, float *vp)
 	D3D11DeviceContext->IASetInputLayout(Layout.Get());
 
 	D3D11DeviceContext->UpdateSubresource(pd3dConstantBuffer.Get(), 0, 0, &CnstBuffer, 0, 0);
-
-	/*TextureD3D *texd3d = dynamic_cast<TextureD3D*>(tex);
-	D3D11DeviceContext->PSSetShaderResources(0, 1, texd3d->pSRVTex.GetAddressOf());
-	D3D11DeviceContext->PSSetSamplers(0, 1, texd3d->pSampler.GetAddressOf());*/
 
 	D3D11DeviceContext->VSSetConstantBuffers(0, 1, pd3dConstantBuffer.GetAddressOf());
 	D3D11DeviceContext->PSSetConstantBuffers(0, 1, pd3dConstantBuffer.GetAddressOf());

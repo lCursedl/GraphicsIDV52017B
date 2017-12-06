@@ -8,18 +8,17 @@ void TestApp::InitVars() {
 	Orientation = VECTOR4D(0.0f, 0.0f, 0.0f);
 	Scaling = VECTOR4D(1.0f, 1.0f, 1.0f);
 
-	MyCamera.Init(VECTOR4D(0.0f, 1.0f, 1.0f), 45.0f * (3.141592653589f / 180.0f), 1280.0f / 720.0f, 1.0f, 10000.0f);
+	MyCamera.Init(VECTOR4D(0.0f, 100.0f, 1.0f), 45.0f * (3.141592653589f / 180.0f), 1280.0f / 720.0f, 1.0f, 10000.0f);
 	MyCamera.Speed = 10.0f;
 	MyCamera.Eye = VECTOR4D(0.0f, 9.75f, -31.0f, 0.0f);
 	MyCamera.Pitch = 0.14f;
 	MyCamera.Roll = 0.0f;
 	MyCamera.Yaw = 0.020f;
 	MyCamera.Update(0.0f);
-	MyScene.CreateCamera(pCam);
-
 	pCam = &MyCamera;
+	MyScene.CreateCamera(pCam);	
 
-	/*LightCamera.Init(VECTOR4D(0.0f, 1.0f, 10.0f, 0.0f), 60.0f * (3.141592653589f / 180.0f), 1.0f, 0.1f, 8000.0f, false);
+	LightCamera.Init(VECTOR4D(0.0f, 3000.0f, 10.0f, 0.0f), 60.0f * (3.141592653589f / 180.0f), 1.0f, 0.1f, 8000.0f, false);
 	LightCamera.Speed = 10.0f;
 	LightCamera.Eye = VECTOR4D(0.0f, 25.0f, -40.0f, 0.0f);
 	LightCamera.Pitch = 0.14f;
@@ -27,23 +26,23 @@ void TestApp::InitVars() {
 	LightCamera.Yaw = 0.020f;
 	LightCamera.Update(0.0f);
 	
-	MyScene.AmbientClr = (.5f, .5f, .5f, 1.0f);
-	MyScene.CreateLightCamera(&LightCamera);*/
+	MyScene.AmbientClr = VECTOR4D(0.5f, 0.5f, 0.5f, 1.0f);
+	MyScene.CreateLightCamera(&LightCamera);
 
-	/*for (int i = 0; i < LIGHT_COUNT; i++)
+	for (int i = 0; i < LIGHT_COUNT; i++)
 	{
 		float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 		float g = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 		float b = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-		MyScene.CreateLight(VECTOR4D(5.f, 0.0f, 0.0f), VECTOR4D(0.0f, 255.0f, 255.0f), true);
-	}*/
+		MyScene.CreateLight(VECTOR4D(0.0f, 0.0f, 0.0f), VECTOR4D(255.0f, 255.0f, 255.0f), true);
+	}
 }
 
 void TestApp::CreateAssets() {
 	PrimitiveMgr.SetVP(&VP);
 
 	int indexI = PrimitiveMgr.CreateMesh("Scene.X");
-	//int indexI2 = PrimitiveMgr.CreateCube();
+	// indexI2 = PrimitiveMgr.CreateCube();
 	int indexI3 = PrimitiveMgr.CreateMesh("CerdoNuevo.X");
 	int indexI4 = PrimitiveMgr.CreateMesh("NuBatman.X");
 	Models[0].CreateInstance(PrimitiveMgr.GetPrimitive(indexI), &VP);
