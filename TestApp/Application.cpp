@@ -36,13 +36,15 @@ void TestApp::InitVars() {
 		float b = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 		MyScene.CreateLight(VECTOR4D(0.0f, 0.0f, 0.0f), VECTOR4D(1.0f, 1.0f, 1.0f), true);
 	}
+
+	m_Physics.init();
 }
 
 void TestApp::CreateAssets() {
 	PrimitiveMgr.SetVP(&VP);
 
 	int indexI = PrimitiveMgr.CreateMesh("Scene.X");
-	// indexI2 = PrimitiveMgr.CreateCube();
+	//int indexI2 = PrimitiveMgr.CreateCube();
 	int indexI3 = PrimitiveMgr.CreateMesh("CerdoNuevo.X");
 	int indexI4 = PrimitiveMgr.CreateMesh("NuBatman.X");
 	Models[0].CreateInstance(PrimitiveMgr.GetPrimitive(indexI), &VP);
@@ -64,6 +66,7 @@ void TestApp::CreateAssets() {
 
 void TestApp::DestroyAssets() {
 	PrimitiveMgr.DestroyPrimitives();
+	m_Physics.clear();
 }
 
 void TestApp::OnUpdate() {
@@ -82,13 +85,13 @@ void TestApp::OnUpdate() {
 	Models[0].ScaleAbsolute(Scaling.x);
 	Models[0].Update();	
 
-	/*Cubes[0].TranslateAbsolute(Position.x, Position.y, Position.z);
-	Cubes[0].RotateXAbsolute(Orientation.x);
-	Cubes[0].RotateYAbsolute(Orientation.y);
-	Cubes[0].RotateZAbsolute(Orientation.z);
-	Cubes[0].ScaleAbsolute(Scaling.x);
-	Cubes[0].TranslateRelative(MyScene.LightContainer[0].Position.x, MyScene.LightContainer[0].Position.y, MyScene.LightContainer[0].Position.z);
-	Cubes[0].Update();*/
+	//Cubes[0].TranslateAbsolute(Position.x, Position.y, Position.z);
+	//Cubes[0].RotateXAbsolute(Orientation.x);
+	//Cubes[0].RotateYAbsolute(Orientation.y);
+	//Cubes[0].RotateZAbsolute(Orientation.z);
+	//Cubes[0].ScaleAbsolute(Scaling.x);
+	////Cubes[0].TranslateRelative(MyScene.LightContainer[0].Position.x, MyScene.LightContainer[0].Position.y, MyScene.LightContainer[0].Position.z);
+	//Cubes[0].Update();
 
 	Models[1].TranslateAbsolute(MyScene.LightContainer[0].Position.x, MyScene.LightContainer[0].Position.y, MyScene.LightContainer[0].Position.z);
 	Models[1].RotateXAbsolute(Orientation.x);
@@ -104,15 +107,32 @@ void TestApp::OnUpdate() {
 	Models[2].ScaleAbsolute(Scaling.x);
 	Models[2].Update();
 
+	m_Physics.update();
+
 	OnDraw();
 }
 
 void TestApp::OnDraw() {
 	pFramework->pVideoDriver->Clear();
 	Models[0].Draw();
-	//Cubes[0].Draw();
+	
 	Models[1].Draw();
 	Models[2].Draw();
+
+	//Cubes[0].Draw();
+	std::vector<VECTOR4D>ActorPositions = m_Physics.m_Actors();
+	for (unsigned int i = 0; i < ActorPositions.size(); i++)
+	{
+		Models[1].TranslateAbsolute(Position.x, Position.y, Position.z);
+		Models[1].RotateXAbsolute(Orientation.x);
+		Models[1].RotateYAbsolute(Orientation.y);
+		Models[1].RotateZAbsolute(Orientation.z);
+		Models[1].ScaleAbsolute(Scaling.x * CUBE_SIZE);
+		Models[1].TranslateRelative(ActorPositions[i].x, ActorPositions[i].y, ActorPositions[i].z);
+		Models[1].Update();
+		Models[1].Draw();
+	}
+
 	pFramework->pVideoDriver->SwapBuffers();
 }
 
@@ -198,6 +218,11 @@ void TestApp::OnInput() {
 	if (IManager.PressedKey(SDLK_d))
 	{
 		pCam->MoveLeft(Delta);
+	}
+
+	if (IManager.PressedOnceKey(SDLK_SPACE))
+	{
+		m_Physics.CreateG(PxTransform(pCam->Eye.x, pCam->Eye.y, pCam->Eye.z));
 	}
 
 	float yaw = 0.005f*static_cast<float>(IManager.xDelta);

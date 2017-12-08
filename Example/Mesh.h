@@ -41,7 +41,7 @@ public:
 	GLint	uvAttribLoc;
 	GLint	diffuseAttribLoc;
 	GLint	lightposLoc;
-
+	GLint	cameraposLoc;
 	GLint  matWorldViewProjUniformLoc;
 	GLint  matWorldUniformLoc;
 #elif defined (USING_D3D11)

@@ -2,9 +2,10 @@
 #include <PrimitiveManager.h>
 #include <PrimitiveInstance.h>
 #include "Scene.h"
-
+#include "Physics.h"
 #include <d3dx9math.h>
 #include <Timer.h>
+#include <vector>
 
 class TestApp : public AppBase {
 public:
@@ -44,4 +45,6 @@ public:
 
 	Timer			DtTimer;
 	float			Delta;
+
+	CPhysics		m_Physics;
 };

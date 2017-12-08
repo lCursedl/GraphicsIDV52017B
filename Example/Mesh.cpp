@@ -26,6 +26,7 @@ void MeshGL::Create(char * filename) {
 	lightposLoc = glGetUniformLocation(shaderID, "LightPos");
 	matWorldViewProjUniformLoc = glGetUniformLocation(shaderID, "WVP");
 	matWorldUniformLoc = glGetUniformLocation(shaderID, "World");
+	cameraposLoc = glGetUniformLocation(shaderID, "CameraPos");
 
 	P.Parse(filename, MyMeshes);
 
@@ -189,6 +190,8 @@ void MeshGL::Draw(float *t, float *vp)
 
 	glUniformMatrix4fv(matWorldUniformLoc, 1, GL_FALSE, &transform.m[0][0]);
 	glUniformMatrix4fv(matWorldViewProjUniformLoc, 1, GL_FALSE, &WVP.m[0][0]);
+	glUniform4fv(lightposLoc, 1, &pScProp->LightContainer[0].Position.x);
+	glUniform4fv(cameraposLoc, 1, &pScProp->CameraContainer[0]->Eye.x);
 
 	//VECTOR4D PosLight(-15.0f, 0.0f, 0.0f);
 

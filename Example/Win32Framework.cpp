@@ -21,7 +21,7 @@ void Win32Framework::OnCreateApplication(){
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_WM_SetCaption("UAD Framework Gustavo", 0);
 	int flags = SDL_HWSURFACE;
-	flags |= SDL_FULLSCREEN;
+	//flags |= SDL_FULLSCREEN;
 	//flags |= SDL_RESIZABLE;
 	
 	int width = 1360;
