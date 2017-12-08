@@ -18,15 +18,15 @@ void TestApp::InitVars() {
 	pCam = &MyCamera;
 	MyScene.CreateCamera(pCam);	
 
-	LightCamera.Init(VECTOR4D(0.0f, 3000.0f, 10.0f, 0.0f), 60.0f * (3.141592653589f / 180.0f), 1.0f, 0.1f, 8000.0f, false);
+	LightCamera.Init(VECTOR4D(0.0f, 0.0f, 0.0f, 0.0f), 60.0f * (3.141592653589f / 180.0f), 1.0f, 0.1f, 8000.0f, false);
 	LightCamera.Speed = 10.0f;
 	LightCamera.Eye = VECTOR4D(0.0f, 25.0f, -40.0f, 0.0f);
-	LightCamera.Pitch = 0.14f;
+	LightCamera.Pitch = 0.0f;
 	LightCamera.Roll = 0.0f;
 	LightCamera.Yaw = 0.020f;
 	LightCamera.Update(0.0f);
 	
-	MyScene.AmbientClr = VECTOR4D(0.5f, 0.5f, 0.5f, 1.0f);
+	MyScene.AmbientClr = VECTOR4D(0.5f, 0.5f, 0.5f, 0.0f); 
 	MyScene.CreateLightCamera(&LightCamera);
 
 	for (int i = 0; i < LIGHT_COUNT; i++)
@@ -34,7 +34,7 @@ void TestApp::InitVars() {
 		float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 		float g = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 		float b = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-		MyScene.CreateLight(VECTOR4D(0.0f, 0.0f, 0.0f), VECTOR4D(255.0f, 255.0f, 255.0f), true);
+		MyScene.CreateLight(VECTOR4D(0.0f, 0.0f, 0.0f), VECTOR4D(1.0f, 1.0f, 1.0f), true);
 	}
 }
 
@@ -90,7 +90,7 @@ void TestApp::OnUpdate() {
 	Cubes[0].TranslateRelative(MyScene.LightContainer[0].Position.x, MyScene.LightContainer[0].Position.y, MyScene.LightContainer[0].Position.z);
 	Cubes[0].Update();*/
 
-	Models[1].TranslateAbsolute(Position.x, Position.y, Position.z);
+	Models[1].TranslateAbsolute(MyScene.LightContainer[0].Position.x, MyScene.LightContainer[0].Position.y, MyScene.LightContainer[0].Position.z);
 	Models[1].RotateXAbsolute(Orientation.x);
 	Models[1].RotateYAbsolute(Orientation.y);
 	Models[1].RotateZAbsolute(Orientation.z);

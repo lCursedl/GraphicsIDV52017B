@@ -1,8 +1,8 @@
 #include "Camera.h"
 
-const VECTOR4D CCamera::LookConstCameraSpace = VECTOR4D(0.0f, 0.0f, 1.0f);
-const VECTOR4D CCamera::RIghtConstCameraSPace = VECTOR4D(1.0f, 0.0f, 0.0f);
-const VECTOR4D CCamera::UpConstCameraSpace = VECTOR4D(0.0f, 1.0f, 0.0f);
+const VECTOR4D CCamera::LookConstCameraSpace = VECTOR4D(0.0f, 0.0f, 1.0f, 0.0f);
+const VECTOR4D CCamera::RIghtConstCameraSPace = VECTOR4D(1.0f, 0.0f, 0.0f, 0.0f);
+const VECTOR4D CCamera::UpConstCameraSpace = VECTOR4D(0.0f, 1.0f, 0.0f, 0.0f);
 
 CCamera::CCamera()
 {
@@ -41,7 +41,7 @@ void CCamera::CreateProjection()
 void CCamera::SetLookAt(VECTOR4D v)
 {
 	Look = v - Eye;
-	Normalize(Look);
+	Look = Normalize(Look);
 	Pitch = atan2f(-Look.y, -Look.z);
 	Yaw = atan2f(-Look.x, Look.z);
 

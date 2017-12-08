@@ -21,11 +21,11 @@ void Win32Framework::OnCreateApplication(){
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_WM_SetCaption("UAD Framework Gustavo", 0);
 	int flags = SDL_HWSURFACE;
-	//flags |= SDL_FULLSCREEN;
+	flags |= SDL_FULLSCREEN;
 	//flags |= SDL_RESIZABLE;
 	
-	int width = 1280;
-	int height = 720;
+	int width = 1360;
+	int height = 768;
 	SDL_SetVideoMode(width, height, 32, flags);
 
 #ifdef USING_OPENGL_ES
